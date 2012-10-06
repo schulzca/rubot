@@ -4,8 +4,10 @@ An IRC Bot written in Ruby
 
 === Capabilities
 * all: <message> #Pings everyone else in the chat. (credit to ecruby/chatbot)
+* !nfl			 #show gamelist or scores for current week
+* !str:<method>  #call ruby methods on your message (no params yet)
 
 === Things to Add
-* Respond to certain language references
+* Responses to relavant text
 * Games
 * Point system

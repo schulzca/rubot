@@ -23,7 +23,8 @@ def constantize(camel_cased_word)
   constant
 end
 
-$help_messages = []
+$help_messages = ["!help     See what #{$settings['settings']['nick']} can do.",
+		  "!help me  See what #{$settings['settings']['nick']} can do in a private message."]
 
 $settings["settings"]["plugins"].each do |plugin|
   require "./plugins/#{plugin}"
@@ -38,8 +39,12 @@ end
     c.plugins.plugins = $settings["settings"]["plugins"].map {|plugin| constantize(plugin.split("_").map {|word| word.capitalize}.join(""))}
   end
 
-  on :message, /^!help/ do |m|
-    $help_messages.each{|message| m.user.send message }
+  on :message, /^!help me$/ do |m|
+	    $help_messages.each{|message| m.user.send message }
+  end
+
+  on :message, /^!help$/ do |m|
+	  $help_messages.each{|message| m.reply message }
   end
 
 end

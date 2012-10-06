@@ -5,3 +5,5 @@ settings:
   nickserv_pass: rubotTheRubyBot
   plugins:
     - "repeater"
+    - "ruby_strings"
+    - "nfl"
