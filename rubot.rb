@@ -35,7 +35,7 @@ end
   configure do |c|
     c.server = "irc.freenode.com"
     c.nick = $settings["settings"]["nick"]
-    c.channels = [$settings["settings"]["channel"]]
+    c.channels = $settings["settings"]["channel"]
     c.plugins.plugins = $settings["settings"]["plugins"].map {|plugin| constantize(plugin.split("_").map {|word| word.capitalize}.join(""))}
   end
 
