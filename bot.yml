@@ -1,9 +1,0 @@
-settings:
-  nick: rubot
-  channel: '#uwec-cs'
-
-  nickserv_pass: rubotTheRubyBot
-  plugins:
-    - "repeater"
-    - "ruby_strings"
-    - "nfl"
