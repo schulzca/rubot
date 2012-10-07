@@ -8,6 +8,8 @@ class Nfl
 
 	$help_messages << "!nfl gamelist   show every game this week"
 	$help_messages << "!nfl current    show scores for games this week"
+	$help_messages << "!nfl <team abbr> game    show game time for games with teams that match <team abbr>"
+	$help_messages << "!nfl <team abbr> score    show game score for games with team that match <team abbr>"
 
 	listen_to :channel
 	
@@ -26,6 +28,10 @@ class Nfl
 				list_weeks_games(m)
 			when /^!nfl$/
 				help(m)
+			when /!nfl (\S+) score$/
+				list_active_games(m,$1)
+			when /!nfl (\S+) game$/
+				list_weeks_games(m,$1)
 			end	
 				
 		rescue Exception => e
@@ -37,7 +43,7 @@ class Nfl
 		$help_messages.each {|help| m.reply(help) if help.start_with?("!nfl")}
 	end
 	
-	def list_active_games(m)
+	def list_active_games(m, team = ".")
 		begin
 			@active = JSON.parse open("http://www.nfl.com/liveupdate/scores/scores.json").read
 			@active.each do |game|
@@ -46,8 +52,9 @@ class Nfl
 				hscore = game[1]["home"]["score"]["T"]
 				ascore = game[1]["away"]["score"]["T"]
 				qtr = game[1]["qtr"]
-				
-				m.reply "#{home} (#{hscore}) vs #{away} (#{ascore}) #{qtr if qtr == "Final"}"
+				if(home.match(/#{team}/i) or away.match(/#{team}/i))
+					m.reply "#{home} (#{hscore}) vs #{away} (#{ascore}) #{qtr if qtr == "Final"}"
+				end
 				#str << " FINAL" if game["qtr"] == "Final"
 			end
 		rescue Exception => e
@@ -55,10 +62,10 @@ class Nfl
 		end
 	end
 	
-	def list_weeks_games(m)
+	def list_weeks_games(m, team = ".")
 		begin
 			@week = JSON.parse open("http://www.nfl.com/liveupdate/scorestrip/ss.json").read
-			m.reply "Week #{@week["w"]} Games:"
+			m.reply "Week #{@week["w"]} Games:" if team == "."
 			@week["gms"].each do |game|
 				day = game["d"]
 				h = game["h"]
@@ -72,8 +79,9 @@ class Nfl
 				time = "#{time}:#{$2}"
 				
 				
-				
-				m.reply "#{h} #{hnn} vs #{v} #{vnn} (#{day}: #{time})"
+				if(h.match(/#{team}/i) or v.match(/#{team}/i))
+					m.reply "#{h} #{hnn} vs #{v} #{vnn} (#{day}: #{time})"
+				end
 				#str << " FINAL" if game["qtr"] == "Final"
 			end
 		rescue Exception => e
