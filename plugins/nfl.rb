@@ -55,7 +55,6 @@ class Nfl
 				if(home.match(/#{team}/i) or away.match(/#{team}/i))
 					m.reply "#{home} (#{hscore}) vs #{away} (#{ascore}) #{qtr if qtr == "Final"}"
 				end
-				#str << " FINAL" if game["qtr"] == "Final"
 			end
 		rescue Exception => e
 			error(m,e)
@@ -82,7 +81,6 @@ class Nfl
 				if(h.match(/#{team}/i) or v.match(/#{team}/i))
 					m.reply "#{h} #{hnn} vs #{v} #{vnn} (#{day}: #{time})"
 				end
-				#str << " FINAL" if game["qtr"] == "Final"
 			end
 		rescue Exception => e
 			error(m,e)

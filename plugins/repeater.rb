@@ -14,16 +14,14 @@ class Repeater
   def listen(m)
     case m.message
     when /^all:/
-      if n = nicks(m)
+      n = nicks(m)
+      if n and not n.match(/the_donbot/)
         m.reply "#{nicks(m)}: ^"
-      else
-        m.reply "You're the only one here, idiot"
       end
     when /^#{$settings['settings']['nick']}.*ping/
-      if n = nicks(m)
+      n = nicks(m)
+      if n and not n.match(/the_donbot/)
         m.reply "#{nicks(m)}: ping"
-      else
-        m.reply "You're the only one here, idiot"
       end
     end
   end
