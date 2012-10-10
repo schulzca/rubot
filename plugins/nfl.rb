@@ -46,6 +46,7 @@ class Nfl
 	def list_active_games(m, team = ".")
 		begin
 			@active = JSON.parse open("http://www.nfl.com/liveupdate/scores/scores.json").read
+      result = ""
 			@active.each do |game|
 				home = game[1]["home"]["abbr"]
 				away = game[1]["away"]["abbr"]
@@ -53,9 +54,10 @@ class Nfl
 				ascore = game[1]["away"]["score"]["T"]
 				qtr = game[1]["qtr"]
 				if(home.match(/#{team}/i) or away.match(/#{team}/i))
-					m.reply "#{home} (#{hscore}) vs #{away} (#{ascore}) #{qtr if qtr == "Final"}"
+					result =  "#{result}#{home} (#{hscore}) vs #{away} (#{ascore}) #{qtr if qtr == "Final"}\n"
 				end
 			end
+			m.reply result unless result.empty?
 		rescue Exception => e
 			error(m,e)
 		end
@@ -64,7 +66,8 @@ class Nfl
 	def list_weeks_games(m, team = ".")
 		begin
 			@week = JSON.parse open("http://www.nfl.com/liveupdate/scorestrip/ss.json").read
-			m.reply "Week #{@week["w"]} Games:" if team == "."
+			result = ""
+			result =  "Week #{@week["w"]} Games:\n" if team == "."
 			@week["gms"].each do |game|
 				day = game["d"]
 				h = game["h"]
@@ -79,9 +82,10 @@ class Nfl
 				
 				
 				if(h.match(/#{team}/i) or v.match(/#{team}/i))
-					m.reply "#{h} #{hnn} vs #{v} #{vnn} (#{day}: #{time})"
+					result = "#{result}#{h} #{hnn} vs #{v} #{vnn} (#{day}: #{time})\n"
 				end
 			end
+			m.reply result unless result.empty?
 		rescue Exception => e
 			error(m,e)
 		end
