@@ -6,17 +6,17 @@ An IRC Bot written in Ruby (credit to ecruby/chatbot for configuration)
 
 Besides installing the cinch gem, you'll need a bot.yml that looks like this:
 
-	settings:
-		nick: my_cinch_bot
-		channel: 
-			- '#some-channel'
-			- '#secure-channel channel-password'
+  settings:
+    nick: my_cinch_bot
+    channel: 
+      - '#some-channel'
+      - '#secure-channel channel-password'
 
-		plugins:
-			- "repeater"
-			- "nfl"
-			- "rhyme"
-			- "reddit"
+    plugins:
+      - "repeater"
+      - "nfl"
+      - "rhyme"
+      - "reddit"
 
 === Capabilities
 * repeater		#Pings everyone else in the chat. (ecruby/chatbot)
