@@ -30,7 +30,7 @@ $settings["settings"]["plugins"].each do |plugin|
   require "./plugins/#{plugin}"
 end
 
-@irc  = Cinch::Bot.new do
+$irc  = Cinch::Bot.new do
   
   configure do |c|
     c.server = "irc.freenode.com"
@@ -40,13 +40,21 @@ end
   end
 
   on :message, /^!help me$/ do |m|
-	    $help_messages.each{|message| m.user.send message }
+	$help_messages.each{|message| m.user.send message }
   end
 
   on :message, /^!help$/ do |m|
-	  $help_messages.each{|message| m.reply message }
+	$help_messages.each{|message| m.reply message }
+  end
+  
+  on :message, /^!reload$/ do |m|
+	if m.user == User("schulzca")
+		system("start ruby rubot.rb")
+		$irc.quit 
+		system("exit")
+	end
   end
 
 end
 
-@irc.start
+$irc.start
