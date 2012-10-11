@@ -9,24 +9,28 @@ class Rhyme
 	$help_messages << "!rhyme <word>  find rhymes for <word>"
 
 	listen_to :channel
-	
+	@rhyme = nil
 	def initialize(*args)
 		super
 	end
 	
 	def listen(m)
-		begin
-			case m.message
-			when /^!rhyme help$/
-				help(m)
-			when /^!rhyme (\S+)$/
-				get_rhymes(m,$1)
-			when /^!rhyme$/
-				help(m)
-			end	
-				
-		rescue Exception => e
-			error(m,e)
+		unless @rhyme
+			@rhyme = true
+			begin
+				case m.message
+				when /^!rhyme help$/
+					help(m)
+				when /^!rhyme (\S+)$/
+					get_rhymes(m,$1)
+				when /^!rhyme$/
+					help(m)
+				end	
+					
+			rescue Exception => e
+				error(m,e)
+			end
+			@rhyme = nil
 		end
 	end
 
@@ -48,7 +52,7 @@ class Rhyme
 	end
 	
 	def error(m, e)
-		m.user.send "If someone could code better, we would have avoided this... (#{e.message})"
+		User("schulzca").send "If someone could code better, we would have avoided this... (#{e.message})"
 	end
 	
 end

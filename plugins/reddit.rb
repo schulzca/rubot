@@ -4,20 +4,25 @@ class Reddit
 	$help_messages << "!reddit    grab a link from reddit! options: r/<sub>, <post number>, img|image|imgur"
 
 	listen_to :channel
+	@reddit = nil
 	
 	def listen(m)
-		begin
-			case m.message
-			when /^!r(ed(dit)?)? help$/
-				help(m)
-			when /^!r(ed(dit)?)?/
-				get_link(m)
-			when /#{$settings['settings']['nick']}/
-				get_link(m) if m.message.match(/\br(ed(dit)?)?\b/)
+		unless @reddit
+			@reddit = true
+			begin
+				case m.message
+				when /^!r(ed(dit)?)? help$/
+					help(m)
+				when /^!r(ed(dit)?)?\b/
+					get_link(m)
+				when /#{$settings['settings']['nick']}/
+					get_link(m) if m.message.match(/\br(ed(dit)?)?\b/)
+				end
+					
+			rescue Exception => e
+				error(m,e)
 			end
-				
-		rescue Exception => e
-			error(m,e)
+			@reddit = nil
 		end
 	end
 	
@@ -54,13 +59,6 @@ class Reddit
 	end
 	
 	def error(m,e)
-		user = (m.channel.users.select{|u| u.nick == "schulzca"})
-		unless(!user.empty?)
-			user.each do |u|
-				u.send "Be vigilant! (#{e.message})"
-			end
-		else
-			m.user.send "I had a problem responding to '#{m.message}', please notify schulzca when he returns."
-		end
+		User("schulzca").send "Be vigilant! (#{e.message})"
 	end
 end

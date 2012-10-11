@@ -12,30 +12,35 @@ class Nfl
 	$help_messages << "!nfl <team abbr> score    show game score for games with team that match <team abbr>"
 
 	listen_to :channel
+	@nfl = nil
 	
 	def initialize(*args)
 		super
 	end
 	
 	def listen(m)
-		begin
-			case m.message
-			when /^!nfl help$/
-				help(m)
-			when /^!nfl current$/
-				list_active_games(m)
-			when /^!nfl gamelist$/
-				list_weeks_games(m)
-			when /^!nfl$/
-				help(m)
-			when /!nfl (\S+) score$/
-				list_active_games(m,$1)
-			when /!nfl (\S+) game$/
-				list_weeks_games(m,$1)
-			end	
-				
-		rescue Exception => e
-			error(m,e)
+		unless @nfl
+			@nfl = true
+			begin
+				case m.message
+				when /^!nfl help$/
+					help(m)
+				when /^!nfl current$/
+					list_active_games(m)
+				when /^!nfl gamelist$/
+					list_weeks_games(m)
+				when /^!nfl$/
+					help(m)
+				when /!nfl (\S+) score$/
+					list_active_games(m,$1)
+				when /!nfl (\S+) game$/
+					list_weeks_games(m,$1)
+				end	
+					
+			rescue Exception => e
+				error(m,e)
+			end
+			@nfl = nil
 		end
 	end
 
@@ -92,7 +97,7 @@ class Nfl
 	end
 	
 	def error(m, e)
-		m.reply "I told you to expect bad things. (#{e.message})"
+		User("schulzca").send "I told you to expect bad things. (#{e.message})"
 	end
 	
 end

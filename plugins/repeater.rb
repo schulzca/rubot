@@ -5,25 +5,29 @@ class Repeater
   $help_messages << "all: <message>   ping everyone in the room"
 
   listen_to :channel
-
+  @repeater = nil
   def nicks(m)
     names = m.channel.users.keys.map(&:nick).reject{|n|[$settings['settings']['nick'],m.user.nick].include?(n)}
     names.join(' ') unless names.empty?
   end
 
   def listen(m)
-    case m.message
-    when /^all:/
-      n = nicks(m)
-      if n and not n.match(/the_donbot/)
-        m.reply "#{nicks(m)}: ^"
-      end
-    when /^#{$settings['settings']['nick']}.*ping/
-      n = nicks(m)
-      if n and not n.match(/the_donbot/)
-        m.reply "#{nicks(m)}: ping"
-      end
-    end
+	unless @repeater
+		@repeater = true
+		case m.message
+		when /^all:/
+		  n = nicks(m)
+		  if n and not n.match(/the_donbot/)
+			m.reply "#{nicks(m)}: ^"
+		  end
+		when /^#{$settings['settings']['nick']}.*ping/
+		  n = nicks(m)
+		  if n and not n.match(/the_donbot/)
+			m.reply "#{nicks(m)}: ping"
+		  end
+		end
+		@repeater = nil
+	end
   end
 
 end
