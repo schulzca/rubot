@@ -12,6 +12,8 @@ class Reddit
 				help(m)
 			when /^!r(ed(dit)?)?/
 				get_link(m)
+			when /#{$settings['settings']['nick']}/
+				get_link(m) if m.message.match(/\br(ed(dit)?)?\b/)
 			end
 				
 		rescue Exception => e
@@ -20,20 +22,29 @@ class Reddit
 	end
 	
 	def get_link(m)
-		count = m.message.match(/\b(\d+)\b/) ? "count=#{$1 - 1}" : "count=0"
+		count = m.message.match(/\b(\d+)\b/) ? $1.to_i - 1 : 0
 		limit = !m.message.match(/img|image|imgur/)
 		sub   = m.message.match(/r\/(\S+)/) ? "r/#{$1}/" : ""
+		count = count < 0 ? 0 : count
+		if count > 100
+			m.reply "I can only search up to post 100"
+		end
+		count = count > 99 ? 99 : count
 		if limit
-			json = JSON.parse open("http://www.reddit.com/#{sub}.json?#{count}&limit=1").read
-			data = json["data"]["children"][0]	
-			m.reply "#{data["title"]}#{data["over_18"] ? " (NSFW)" : ""} | #{data["url"]}"
+			url = "http://www.reddit.com/#{sub}.json?limit=100"
+			json = JSON.parse open(url).read
+			data = json["data"]["children"][count]["data"]	
+			m.reply "#{data["over_18"] ? "(NSFW) " : ""}#{data["title"]} | #{data["url"]}"
 		else
 			json = JSON.parse open("http://www.reddit.com/#{sub}.json?#{count}&limit=100").read
-			data = json["data"]["children"].each do |post|
-				if(post["domain"].match(/imgur/))
-					m.reply "#{data["title"]}#{data["over_18"] ? " (NSFW)" : ""} | #{data["url"]}"
+			post_number = 0
+			json["data"]["children"].each do |post|
+				data = post["data"]
+				if(post["data"]["domain"].match(/imgur/) && post_number >= count)
+					m.reply "#{post["data"]["title"]}#{post["data"]["over_18"] ? " (NSFW)" : ""} | #{post["data"]["url"]}"
 					break
 				end
+				post_number += 1
 			end
 		end
 	end
@@ -43,9 +54,11 @@ class Reddit
 	end
 	
 	def error(m,e)
-		user = (m.channel.users.select{|u| u.nick == "schulzca"}).first
-		if(user)
-			user.send "Be vigilant! (#{e.message})"
+		user = (m.channel.users.select{|u| u.nick == "schulzca"})
+		unless(!user.empty?)
+			user.each do |u|
+				u.send "Be vigilant! (#{e.message})"
+			end
 		else
 			m.user.send "I had a problem responding to '#{m.message}', please notify schulzca when he returns."
 		end

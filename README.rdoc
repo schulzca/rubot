@@ -1,10 +1,28 @@
 == Rubot
 
-An IRC Bot written in Ruby
+An IRC Bot written in Ruby (credit to ecruby/chatbot for configuration)
+
+=== Configuration
+
+Besides installing the cinch gem, you'll need a bot.yml that looks like this:
+
+	settings:
+		nick: my_cinch_bot
+		channel: 
+			- '#some-channel'
+			- '#secure-channel channel-password'
+
+		plugins:
+			- "repeater"
+			- "nfl"
+			- "rhyme"
+			- "reddit"
 
 === Capabilities
-* repeater		#Pings everyone else in the chat. (credit to ecruby/chatbot)
+* repeater		#Pings everyone else in the chat. (ecruby/chatbot)
 * nfl			#shows gamelist or scores for current week
+* reddit		#access reddit in various ways
+* rhyme			#become a poet!
 
 
 === Things to Add
