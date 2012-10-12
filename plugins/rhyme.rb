@@ -1,14 +1,10 @@
-require 'open-uri'
-require 'net/http'
-require 'json'
-require 'uri'
-
-class Rhyme 
+class Rhyme < PluginBase 
 	include Cinch::Plugin
+	listen_to :channel
+	listen_to :private
 
 	$help_messages << "!rhyme <word>  find rhymes for <word>"
 
-	listen_to :channel
 	@rhyme = nil
 	def initialize(*args)
 		super
@@ -20,11 +16,11 @@ class Rhyme
 			begin
 				case m.message
 				when /^!rhyme help$/
-					help(m)
+					help(m, "!rhyme")
 				when /^!rhyme (\S+)$/
 					get_rhymes(m,$1)
 				when /^!rhyme$/
-					help(m)
+					help(m, "!rhyme")
 				end	
 					
 			rescue Exception => e
@@ -34,10 +30,6 @@ class Rhyme
 		end
 	end
 
-	def help(m)
-		$help_messages.each {|help| m.reply(help) if help.start_with?("!rhyme")}
-	end
-	
 	def get_rhymes(m, word)
 		begin
 			@words = JSON.parse open("http://rhymebrain.com/talk?function=getRhymes&word=#{word}").read
@@ -50,9 +42,4 @@ class Rhyme
 			error(m,e)
 		end
 	end
-	
-	def error(m, e)
-		User("schulzca").send "If someone could code better, we would have avoided this... (#{e.message})"
-	end
-	
 end

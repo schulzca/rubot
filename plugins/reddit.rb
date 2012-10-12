@@ -1,9 +1,10 @@
-class Reddit
-	include Cinch::Plugin
+class Reddit < PluginBase
+  include Cinch::Plugin
+	listen_to :channel
+	listen_to :private
 
 	$help_messages << "!reddit    grab a link from reddit! options: r/<sub>, <post number>, img|image|imgur"
 
-	listen_to :channel
 	@reddit = nil
 	
 	def listen(m)
@@ -12,7 +13,7 @@ class Reddit
 			begin
 				case m.message
 				when /^!r(ed(dit)?)? help$/
-					help(m)
+					help(m, "!reddit")
 				when /^!r(ed(dit)?)?\b/
 					get_link(m)
 				when /#{$settings['settings']['nick']}/
@@ -52,13 +53,5 @@ class Reddit
 				post_number += 1
 			end
 		end
-	end
-	
-	def help(m)
-		$help_messages.each {|help| m.reply(help) if help.start_with?("!reddit")}
-	end
-	
-	def error(m,e)
-		User("schulzca").send "Be vigilant! (#{e.message})"
 	end
 end

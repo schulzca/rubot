@@ -3,7 +3,7 @@ require 'net/http'
 require 'json'
 require 'uri'
 
-class Nfl 
+class Nfl < PluginBase 
 	include Cinch::Plugin
 
 	$help_messages << "!nfl gamelist   show every game this week"
@@ -11,9 +11,10 @@ class Nfl
 	$help_messages << "!nfl <team abbr> game    show game time for games with teams that match <team abbr>"
 	$help_messages << "!nfl <team abbr> score    show game score for games with team that match <team abbr>"
 
-	listen_to :channel
 	@nfl = nil
-	
+  listen_to :channel 
+  listen_to :private
+
 	def initialize(*args)
 		super
 	end
@@ -24,13 +25,13 @@ class Nfl
 			begin
 				case m.message
 				when /^!nfl help$/
-					help(m)
+					help(m, "!nfl")
 				when /^!nfl current$/
 					list_active_games(m)
 				when /^!nfl gamelist$/
 					list_weeks_games(m)
 				when /^!nfl$/
-					help(m)
+					help(m, "!nfl")
 				when /!nfl (\S+) score$/
 					list_active_games(m,$1)
 				when /!nfl (\S+) game$/
@@ -42,10 +43,6 @@ class Nfl
 			end
 			@nfl = nil
 		end
-	end
-
-	def help(m)
-		$help_messages.each {|help| m.reply(help) if help.start_with?("!nfl")}
 	end
 	
 	def list_active_games(m, team = ".")
@@ -95,9 +92,4 @@ class Nfl
 			error(m,e)
 		end
 	end
-	
-	def error(m, e)
-		User("schulzca").send "I told you to expect bad things. (#{e.message})"
-	end
-	
 end

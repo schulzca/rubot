@@ -9,6 +9,8 @@ rescue
   puts "create bot.yml and populate it with values. See the readme file!"
 end
 
+$master = $settings["settings"]["master"]
+
 # This method is taken from rails core
 # (didn't want to load the entire lib for one method)
 # http://api.rubyonrails.org/classes/ActiveSupport/Inflector.html#method-i-constantize
@@ -49,12 +51,11 @@ $irc  = Cinch::Bot.new do
   
   on :message, /^!reload$/ do |m|
 	if m.user == User("schulzca")
-		system("start ruby rubot.rb")
+		system("ruby rubot.rb &")
 		$irc.quit 
 		system("exit")
 	end
   end
-
 end
 
 $irc.start
