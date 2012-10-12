@@ -19,11 +19,11 @@ Besides installing the cinch gem, you'll need a bot.yml that looks like this:
       - "you_get_the_idea"
 
 === Capabilities
-[repeater]  #Pings everyone else in the chat. (ecruby/chatbot)
-[nfl]  #shows gamelist or scores for current week
-[reddit]  #access reddit in various ways
-[rhyme]  #become a poet!
-[timing]  #stopwatches and timers for everyone!		
+[repeater]  Pings everyone else in the chat. (ecruby/chatbot)
+[nfl]  Shows gamelist or scores for current week
+[reddit]  Access reddit in various ways
+[rhyme]  Bbecome a poet!
+[timing]  Stopwatches and timers for everyone!		
 
 
 === Things to Add
