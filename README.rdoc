@@ -8,6 +8,7 @@ Besides installing the cinch gem, you'll need a bot.yml that looks like this:
 
   settings:
     nick: my_cinch_bot
+    master: my_nick
     channel: 
       - '#some-channel'
       - '#secure-channel channel-password'
@@ -19,10 +20,16 @@ Besides installing the cinch gem, you'll need a bot.yml that looks like this:
       - "reddit"
 
 === Capabilities
-* repeater		#Pings everyone else in the chat. (ecruby/chatbot)
-* nfl			#shows gamelist or scores for current week
-* reddit		#access reddit in various ways
-* rhyme			#become a poet!
+* repeater		
+  #Pings everyone else in the chat. (ecruby/chatbot)
+* nfl			
+  #shows gamelist or scores for current week
+* reddit		
+  #access reddit in various ways
+* rhyme			
+  #become a poet!
+* timing
+  #stopwatches and timers for everyone!		
 
 
 === Things to Add
