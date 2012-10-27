@@ -3,6 +3,8 @@ class template < PluginBase
 
 	$help_messages << "!template   this is what this plugin does"
 
+	listen_to :channel
+	listen_to :private
 	
 	def listen(m)
 			begin
