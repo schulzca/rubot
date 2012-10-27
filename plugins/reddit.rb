@@ -21,7 +21,11 @@ class Reddit < PluginBase
 				end
 					
 			rescue Exception => e
-				error(m,e)
+			  if e.message.length < 256
+          error(m,e)
+        else
+          m.reply "No results."
+        end
 			end
 			@reddit = nil
 		end
@@ -39,19 +43,27 @@ class Reddit < PluginBase
 		if limit
 			url = "http://www.reddit.com/#{sub}.json?limit=100"
 			json = JSON.parse open(url).read
-			data = json["data"]["children"][count]["data"]	
-			m.reply "#{data["over_18"] ? "(NSFW) " : ""}#{data["title"]} | #{data["url"]}"
+			unless json['error'] == 403
+        data = json["data"]["children"][count]["data"]	
+        m.reply "#{data["over_18"] ? "(NSFW) " : ""}#{data["title"]} | #{data["url"]}"
+      else
+        m.replty "No results."
+      end
 		else
-			json = JSON.parse open("http://www.reddit.com/#{sub}.json?#{count}&limit=100").read
-			post_number = 0
-			json["data"]["children"].each do |post|
-				data = post["data"]
-				if(post["data"]["domain"].match(/imgur/) && post_number >= count)
-					m.reply "#{post["data"]["title"]}#{post["data"]["over_18"] ? " (NSFW)" : ""} | #{post["data"]["url"]}"
-					break
-				end
-				post_number += 1
-			end
+			json = JSON.parse open("http://www.reddit.com/#{sub}.json?limit=100").read
+			unless json['error'] == 403
+        post_number = 0
+        json["data"]["children"].each do |post|
+          data = post["data"]
+          if(data["domain"].match(/imgur/) && post_number >= count)
+            m.reply "#{data["title"]}#{data["over_18"] ? " (NSFW)" : ""} | #{data["url"]}"
+            break
+          end
+          post_number += 1
+        end
+      else
+        m.reply "No results."
+      end
 		end
 	end
 end
