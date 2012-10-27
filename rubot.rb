@@ -25,8 +25,7 @@ def constantize(camel_cased_word)
   constant
 end
 
-$help_messages = ["!help     See what #{$settings['settings']['nick']} can do.",
-		  "!help me  See what #{$settings['settings']['nick']} can do in a private message."]
+$help_messages = []
 
 $settings["settings"]["plugins"].each do |plugin|
   require "./plugins/#{plugin}"
@@ -38,23 +37,31 @@ $irc  = Cinch::Bot.new do
     c.server = "irc.freenode.com"
     c.nick = $settings["settings"]["nick"]
     c.channels = $settings["settings"]["channel"]
-    c.plugins.plugins = $settings["settings"]["plugins"].map {|plugin| constantize(plugin.split("_").map {|word| word.capitalize}.join(""))}
-  end
-
-  on :message, /^!help me$/ do |m|
-	$help_messages.each{|message| m.user.send message }
+    c.plugins.plugins = [Cinch::Plugins::Identify] + $settings["settings"]["plugins"].map {|plugin| constantize(plugin.split("_").map {|word| word.capitalize}.join(""))}
+    c.plugins.options[Cinch::Plugins::Identify] = {
+      :username => $settings['settings']['nick'],
+      :password => $settings['settings']['nickserv_pass'],
+      :type     => :nickserv
+    }
   end
 
   on :message, /^!help$/ do |m|
-	$help_messages.each{|message| m.reply message }
+    $help_messages.each{|message| m.user.send message }
   end
   
   on :message, /^!reload$/ do |m|
-	if m.user == User("schulzca")
-		system("ruby rubot.rb &")
-		$irc.quit 
-		system("exit")
-	end
+    if m.user == User($master)
+      system("ruby rubot.rb &")
+      $irc.quit 
+      system("exit")
+    end
+  end
+
+  on :message, /^!(die|kill|quit)$/ do |m|
+    if m.user == User($master)
+      $irc.quit
+      system("exit")
+    end
   end
 end
 
