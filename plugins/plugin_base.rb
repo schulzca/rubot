@@ -7,7 +7,7 @@ class PluginBase
 	include Cinch::Plugin
 	
 	def help(m,prefix)
-		$help_messages.each {|help| m.reply(help) if help.start_with?(prefix)}
+		$help_messages.each {|help| m.user.send(help) if help.start_with?(prefix)}
 	end
 	
 	def error(m,e)
