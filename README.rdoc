@@ -4,11 +4,14 @@ An IRC Bot written in Ruby (credit to ecruby/chatbot for configuration)
 
 === Configuration
 
-Besides installing the cinch gem, you'll need a bot.yml that looks like this:
+Besides installing the cinch and cinch-identify gems, you'll need a bot.yml that looks like this:
 
   settings:
     nick: my_cinch_bot
+    nickserv_pass: my_password
     master: my_nick
+    level_path: file_path_to_store_json_for_experience_pluggin
+    wordcount_path: file_path_to_store_json_for_wordcount_pluggin
     channel: 
       - '#some-channel'
       - '#secure-channel channel-password'
@@ -19,14 +22,17 @@ Besides installing the cinch gem, you'll need a bot.yml that looks like this:
       - "you_get_the_idea"
 
 === Capabilities
+[plugin_manager]  Reload plugins without restarting the bot
 [repeater]  Pings everyone else in the chat. (ecruby/chatbot)
 [nfl]  Shows gamelist or scores for current week
 [reddit]  Access reddit in various ways
-[rhyme]  Bbecome a poet!
+[rhyme]  Become a poet!
 [timing]  Stopwatches and timers for everyone!		
+[experience]  Turn irc into an RPG
+[word_count]  Track how many words everyone has said
+[messaging]  Send messages that offline users will receive when they are back
 
 
 === Things to Add
 * Responses to relavant text
 * Games
-* Point system
