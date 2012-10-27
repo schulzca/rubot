@@ -2,7 +2,6 @@ class Repeater < PluginBase
   include Cinch::Plugin
 	listen_to :channel
 	listen_to :private
-  $help_messages << "#{$settings['settings']['nick']}: ping everyone in the room"
   $help_messages << "all: <message>   ping everyone in the room"
 
   def nicks(m)
@@ -29,7 +28,7 @@ class Repeater < PluginBase
 
   def ping_all(m, message)
     if m.channel
-      if $repeater_config[m.channel.name]
+      if is_on?(m)
         n = nicks(m)
         m.reply "#{nicks(m)}:#{message}"
       end
@@ -39,7 +38,7 @@ class Repeater < PluginBase
   end
 
   def turn_off(m, channel)
-    if channel
+    if channel and m.user.nick == $master
       $repeater_config[channel.name] = false
       m.reply "Repeater turned off."
     else
@@ -48,11 +47,19 @@ class Repeater < PluginBase
   end
 
   def turn_on(m, channel)
-    if channel
+    if channel and m.user.nick == $master
       $repeater_config[channel.name] = true
       m.reply "Repeater turned on."
     else
       m.reply "Please do that in a channel."
+    end
+  end
+
+  def is_on?(m)
+    if $repeater_config[m.channel.name] == nil
+      $repeater_config[m.channel.name] = true
+    else
+      $repeater_config[m.channel.name]
     end
   end
 end
