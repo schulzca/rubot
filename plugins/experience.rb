@@ -26,25 +26,23 @@ class Experience < PluginBase
   end
 
 	def listen(m)
-	  unless m.channel.to_s.match /wdmgroup/
-			begin
-				case m.message
-				when /^!exp(erience)?( help)?$/
-					help(m, "!exp")
-				when /^!level$/
-				  send_level(m, m.user.nick)
-				when /^!level (\S+)$/
-				  send_level(m,$1)
-				when /^!levels$/
-				  send_all_levels(m)
-			  when /^!props (\S+)$/
-			    give_props(m,$1)
-			  when /^!smack (\S+)$/
-			    smack(m,$1)
-  			end
-			rescue Exception => e
-				error(m,e)
-			end
+    begin
+      case m.message
+      when /^!exp(erience)?( help)?$/
+        help(m, "!exp")
+      when /^!level$/
+        send_level(m, m.user.nick)
+      when /^!level (\S+)$/
+        send_level(m,$1)
+      when /^!levels$/
+        send_all_levels(m)
+      when /^!props (\S+)$/
+        give_props(m,$1)
+      when /^!smack (\S+)$/
+        smack(m,$1)
+      end
+    rescue Exception => e
+      error(m,e)
     end
 	end
 
@@ -173,10 +171,4 @@ class Experience < PluginBase
       return nil
     end
   end
-	
-	def template_method(m)
-	  #JSON EXAMPLE
-		#	url = ""
-		#	json = JSON.parse open(url).read
-	end
 end
