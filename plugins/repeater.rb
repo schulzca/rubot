@@ -38,18 +38,22 @@ class Repeater < PluginBase
   end
 
   def turn_off(m, channel)
-    if channel and m.user.nick == $master
-      $repeater_config[channel.name] = false
-      m.reply "Repeater turned off."
+    if channel 
+      if m.user.nick == $master
+        $repeater_config[channel.name] = false
+        m.reply "Repeater turned off."
+      end
     else
       m.reply "Please do that in a channel."
     end
   end
 
   def turn_on(m, channel)
-    if channel and m.user.nick == $master
-      $repeater_config[channel.name] = true
-      m.reply "Repeater turned on."
+    if channel
+      if m.user.nick == $master
+        $repeater_config[channel.name] = true
+        m.reply "Repeater turned on."
+      end
     else
       m.reply "Please do that in a channel."
     end
