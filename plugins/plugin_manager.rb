@@ -75,6 +75,10 @@ class PluginManager < PluginBase
     classes.each do |p|
       unload_plugin(m, p) unless p == 'PluginManager'
     end
+
+    #clear help messages
+    $help_messages = []
+
      #update plugin list
     $settings = YAML.load(File.read("bot.yml"))
     names = $settings["settings"]["plugins"]
