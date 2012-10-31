@@ -8,7 +8,9 @@ class PluginManager < PluginBase
 			begin
 				case m.message
 				when /^!update$/
-				  reload_all(m)
+				  if m.user.nick == $master
+            reload_all(m)
+          end
   			end
 			rescue Exception => e
 				error(m,e)
