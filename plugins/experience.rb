@@ -54,12 +54,8 @@ class Experience < PluginBase
     if userlist(m).include? nick
       if(m.user.nick == nick)
         score = @json[m.channel][nick]["exp"]
-        if score < 50
-          m.reply "#{nick} loses #{score} exp for boasting."
-        else
-          m.reply "#{nick} loses 50 exp for boasting."
-          score = 50
-        end
+        m.reply "#{nick} loses 50 exp for boasting."
+        score -= 50
         @json[m.channel][nick]["exp"] = score
         save_json
       else
