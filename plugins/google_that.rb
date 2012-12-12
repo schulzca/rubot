@@ -29,7 +29,6 @@ class GoogleThat < PluginBase
 	def generate_link(m,user,message)
 	  url = "http://lmgtfy.com?q=#{message}"
 		url = open("http://tinyurl.com/api-create.php?url=#{URI.escape(url)}").read
-		User($master).send url
 		if url != "Error"
       @channels.each do |c,m2|
         if m2.channel
