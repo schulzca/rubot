@@ -1,6 +1,6 @@
 == Rubot
 
-An IRC Bot written in Ruby (credit to ecruby/chatbot for configuration)
+An IRC Bot written in Ruby (credit to ecruby/chatbot for base configuration)
 
 === Configuration
 
@@ -21,7 +21,7 @@ Besides installing the cinch and cinch-identify gems, you'll need a bot.yml that
       - "another_plugin"
       - "you_get_the_idea"
 
-== To use the summon pluggin, you'll need a minion.yml that looks like this:
+==== To use the summon pluggin, you'll need a minion.yml that looks like this:
 
   settings:
     master: my_nick
