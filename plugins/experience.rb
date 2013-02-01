@@ -28,7 +28,7 @@ class Experience < PluginBase
 	def listen(m)
     begin
       case m.message
-      when /^!exp(erience)?( help)?$/
+      when /^!help exp(erience)?$/
         help(m, "!exp")
       when /^!level$/
         send_level(m, m.user.nick)
