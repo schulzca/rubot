@@ -5,7 +5,7 @@ class template < PluginBase
 
 	listen_to :channel
 	listen_to :private
-	
+
 	def listen(m)
 			begin
 				case m.message

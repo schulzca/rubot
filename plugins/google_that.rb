@@ -12,7 +12,7 @@ class GoogleThat < PluginBase
 	  track_channels(m)
 			begin
 				case m.message
-				when /^!gt help$/
+				when /^!help gt$/
 					help(m, "!gt")
 				when /^!gt (\S+)\s+(.*)$/
 				  generate_link(m,$1,$2)

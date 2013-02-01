@@ -14,6 +14,8 @@ class Repeater < PluginBase
     begin
       $repeater_config ||= {}
       case m.message
+      when /^!help all$/
+        help(m,"all:")
       when /^all:(.*)$/
         ping_all(m, $1)
       when /^all off:$/

@@ -18,7 +18,7 @@ class WordCount < PluginBase
 			begin
 			  update_tracker(m)
 				case m.message
-				when /^!(wordcount|wc) help$/
+				when /^!help (wordcount|wc)$/
 					help(m, "!wordcount")
 				when /^!(wordcount|wc)(\s+leader)?$/
 				  display_leader(m)

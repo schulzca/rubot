@@ -15,7 +15,7 @@ class Messaging < PluginBase
 	  if $json
 			begin
 				case m.message
-				when /^!msg( help)?$/
+				when /^!help msg$/
 					help(m, "!msg")
 				when /^!msg (\S+) (.+)$/
           store_message(m, $1, $2)

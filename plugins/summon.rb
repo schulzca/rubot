@@ -9,7 +9,7 @@ class Summon < PluginBase
 	def listen(m)
 			begin
 				case m.message
-				when /^!summon help$/
+				when /^!help summon$/
 					help(m, "!summon")
         when /^!summon$/
           summon(m,1,m.channel)
