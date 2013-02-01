@@ -9,7 +9,7 @@ class template < PluginBase
 	def listen(m)
 			begin
 				case m.message
-				when /^!template help$/
+				when /^!help template$/
 					help(m, "!template")
   			end
 			rescue Exception => e
