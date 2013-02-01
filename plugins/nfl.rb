@@ -24,7 +24,7 @@ class Nfl < PluginBase
 			@nfl = true
 			begin
 				case m.message
-				when /^!nfl help$/
+				when /^!help nfl$/
 					help(m, "!nfl")
 				when /^!nfl current$/
 					list_active_games(m)
