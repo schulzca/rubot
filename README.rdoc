@@ -12,14 +12,17 @@ Besides installing the cinch and cinch-identify gems, you'll need a bot.yml that
     master: my_nick
     level_path: file_path_to_store_json_for_experience_pluggin
     wordcount_path: file_path_to_store_json_for_wordcount_pluggin
+    speak_path: file_path_to_store_json_for_speak_pluggin
     channel: 
       - '#some-channel'
       - '#secure-channel channel-password'
-
     plugins:
       - "plugin_one"
       - "another_plugin"
       - "you_get_the_idea"
+    deactivate:
+      '#channel':
+        - "plugin_you_dont_wont_in_this_channel"
 
 ==== To use the summon pluggin, you'll need a minion.yml that looks like this:
 
@@ -39,6 +42,7 @@ Besides installing the cinch and cinch-identify gems, you'll need a bot.yml that
 [word_count]  Track how many words everyone has said
 [messaging]  Send messages that offline users will receive when they are back
 [summon]  Summon minions!
+[speak]  Have rubot generate (irc|specific user)-like talk
 
 
 === Things to Add
