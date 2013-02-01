@@ -11,6 +11,6 @@ class PluginBase
 	end
 	
 	def error(m,e)
-		User($master).send "Be vigilant! (#{e.message})"
+		User($master).send "Be vigilant! (#{e.message})\n#{e.backtrace.join("\n")}"
 	end
 end
