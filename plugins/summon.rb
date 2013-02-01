@@ -14,7 +14,7 @@ class Summon < PluginBase
         when /^!summon$/
           summon(m,1,m.channel)
         when /^!summon(\s\d+)?(\s\S+)?$/
-          summon(m,$1,$2.strip)
+          summon(m,$1,$2)
   			end
 			rescue Exception => e
 				error(m,e)
@@ -23,6 +23,7 @@ class Summon < PluginBase
 	
 	def summon(m,number,channel)
 	  number = number ? number.to_i : 1
+	  channel = channel ? channel : m.channel
 	  if m.user == User($master) && channel
 	    $settings["settings"]["channel"].each do |c|
         @channel = c if c.match(/^#{Regexp.escape(channel)}/)
