@@ -11,23 +11,25 @@ class Rhyme < PluginBase
 	end
 	
 	def listen(m)
-		unless @rhyme
-			@rhyme = true
-			begin
-				case m.message
-				when /^!rhyme help$/
-					help(m, "!rhyme")
-				when /^!rhyme (\S+)$/
-					get_rhymes(m,$1)
-				when /^!rhyme$/
-					help(m, "!rhyme")
-				end	
-					
-			rescue Exception => e
-				error(m,e)
-			end
-			@rhyme = nil
-		end
+	  if active?(m,"rhyme")
+      unless @rhyme
+        @rhyme = true
+        begin
+          case m.message
+          when /^!rhyme help$/
+            help(m, "!rhyme")
+          when /^!rhyme (\S+)$/
+            get_rhymes(m,$1)
+          when /^!rhyme$/
+            help(m, "!rhyme")
+          end	
+            
+        rescue Exception => e
+          error(m,e)
+        end
+        @rhyme = nil
+      end
+    end
 	end
 
 	def get_rhymes(m, word)

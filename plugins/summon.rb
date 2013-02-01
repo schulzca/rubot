@@ -7,6 +7,7 @@ class Summon < PluginBase
 	listen_to :private
 	
 	def listen(m)
+	  if active?(m,"summon")
 			begin
 				case m.message
 				when /^!help summon$/
@@ -19,6 +20,7 @@ class Summon < PluginBase
 			rescue Exception => e
 				error(m,e)
 			end
+    end
 	end
 	
 	def summon(m,number,channel)

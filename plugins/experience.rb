@@ -9,7 +9,7 @@ class Experience < PluginBase
 	listen_to :channel
 	listen_to :private
 
-	@json = nil
+	@@json = nil
   GOOD_MESSAGES = ["<nick> wins one internet. +<points> experience.",
                    "You have my sword. And my axe! +<points> experience for <nick>",
                    "All your base are belong to <nick>. +<points> experience.",
@@ -22,27 +22,31 @@ class Experience < PluginBase
 
   def initialize(*args)
     super
-    @json = JSON.parse open($settings["settings"]["level_path"]).read
+    unless @@json
+      @@json = JSON.parse open($settings["settings"]["level_path"]).read
+    end
   end
 
 	def listen(m)
-    begin
-      case m.message
-      when /^!help exp(erience)?$/
-        help(m, "!exp")
-      when /^!level$/
-        send_level(m, m.user.nick)
-      when /^!level (\S+)$/
-        send_level(m,$1)
-      when /^!levels$/
-        send_all_levels(m)
-      when /^!props (\S+)$/
-        give_props(m,$1)
-      when /^!smack (\S+)$/
-        smack(m,$1)
+	  if active?(m,"experience")
+      begin
+        case m.message
+        when /^!help exp(erience)?$/
+          help(m, "!exp")
+        when /^!level$/
+          send_level(m, m.user.nick)
+        when /^!level (\S+)$/
+          send_level(m,$1)
+        when /^!levels$/
+          send_all_levels(m)
+        when /^!props (\S+)$/
+          give_props(m,$1)
+        when /^!smack (\S+)$/
+          smack(m,$1)
+        end
+      rescue Exception => e
+        error(m,e)
       end
-    rescue Exception => e
-      error(m,e)
     end
 	end
 
@@ -53,10 +57,10 @@ class Experience < PluginBase
 	def give_props(m,nick)
     if userlist(m).include? nick
       if(m.user.nick == nick)
-        score = @json[m.channel][nick]["exp"]
+        score = @@json[m.channel][nick]["exp"]
         m.reply "#{nick} loses 50 exp for boasting."
         score -= 50
-        @json[m.channel][nick]["exp"] = score
+        @@json[m.channel][nick]["exp"] = score
         save_json
       else
         give_points(m,nick,5)
@@ -69,10 +73,10 @@ class Experience < PluginBase
 	def smack(m,nick)
     if userlist(m).include? nick
       if(m.user.nick == nick)
-        score = @json[m.channel][nick]["exp"]
+        score = @@json[m.channel][nick]["exp"]
         m.reply "#{nick} has Tyler Durden thing going on. 5 exp lost."
         score -= 5
-        @json[m.channel][nick]["exp"] = score
+        @@json[m.channel][nick]["exp"] = score
         save_json
       else
         lose_points(m,nick,5)
@@ -101,8 +105,8 @@ class Experience < PluginBase
       level += 1
       m.reply "#{nick} leveled up to level #{level}!"
     end
-    @json[m.channel][nick]["level"] = level
-    @json[m.channel][nick]["exp"] = exp
+    @@json[m.channel][nick]["level"] = level
+    @@json[m.channel][nick]["exp"] = exp
     save_json
   end
 
@@ -111,14 +115,14 @@ class Experience < PluginBase
     exp = user["exp"]
     m.reply random_bad_reply(nick,amt)
     exp -= amt
-    @json[m.channel][nick]["exp"] = exp
+    @@json[m.channel][nick]["exp"] = exp
     save_json
   end
 
   def save_json
     unless $writing_to_file
       $writing_to_file = true
-      File.open($settings["settings"]["level_path"], 'w'){|f|f.write(@json.to_json)}
+      File.open($settings["settings"]["level_path"], 'w'){|f|f.write(@@json.to_json)}
       $writing_to_file = false
     end
   end
@@ -148,19 +152,19 @@ class Experience < PluginBase
 
   def get_nick_data(m, user)
     if m.channel
-      if chan = @json[m.channel]
+      if chan = @@json[m.channel]
         if nick = chan[user]
           return nick
         elsif userlist(m).include? user
-          @json[m.channel][user] = {"level" => 1, "exp" => 0}
-          return @json[m.channel][user] 
+          @@json[m.channel][user] = {"level" => 1, "exp" => 0}
+          return @@json[m.channel][user] 
         else 
           m.reply "That person isn't here."
           return nil
         end
       else
-        @json[m.channel] = {user => {"level" => 1, "exp" => 0}}
-        return @json[m.channel][user]
+        @@json[m.channel] = {user => {"level" => 1, "exp" => 0}}
+        return @@json[m.channel][user]
       end
     else
       m.reply "Please do that in the channel."

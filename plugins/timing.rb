@@ -11,53 +11,55 @@ class Timing < PluginBase
 	listen_to :channel
 	listen_to :private
 	
-	$watches = {}
-	$timers = {}
+	@@watches = {}
+	@@timers = {}
 
 	def listen(m)
-    begin
-      case m.message
-      when /^!timing( help)?$/
-        help(m, "!timing")
-      when /^!start$/
-        start_stopwatch(m)
-      when /^!stop$/
-        stop_stopwatch(m)
-      when /^!lap$/
-        peek_stopwatch(m)
-      when /^!timer\s+(\d+)/
-        start_timer(m, $1.to_i)
-      when /^!reset$/
-        reset_stopwatch(m)
-      when /^!cancel$/
-        cancel_timer(m)
+	  if active?(m,"timing")
+      begin
+        case m.message
+        when /^!timing( help)?$/
+          help(m, "!timing")
+        when /^!start$/
+          start_stopwatch(m)
+        when /^!stop$/
+          stop_stopwatch(m)
+        when /^!lap$/
+          peek_stopwatch(m)
+        when /^!timer\s+(\d+)/
+          start_timer(m, $1.to_i)
+        when /^!reset$/
+          reset_stopwatch(m)
+        when /^!cancel$/
+          cancel_timer(m)
+        end
+      rescue Exception => e
+        error(m,e)
       end
-    rescue Exception => e
-      error(m,e)
     end
 	end
 
 	def start_stopwatch m
-    if $watches[m.user.nick]
+    if @@watches[m.user.nick]
       m.reply "#{m.user.nick} already has a stopwatch running! Either !stop it or !reset it."
     else
-      $watches[m.user.nick] = Time.now
+      @@watches[m.user.nick] = Time.now
       m.reply "#{m.user.nick}'s stopwatch was started!"
     end
   end
 
   def stop_stopwatch m   
-    time = $watches[m.user.nick]
+    time = @@watches[m.user.nick]
     if time
       m.reply "#{m.user.nick}'s stopwatch was stopped at #{format_time(time)}!"
-      $watches[m.user.nick] = nil
+      @@watches[m.user.nick] = nil
     else
       m.reply "#{m.user.nick} has no stopwatch to stop! First !start one."
     end
   end
 
   def peek_stopwatch m
-    time = $watches[m.user.nick]
+    time = @@watches[m.user.nick]
     if time
       m.reply "#{m.user.nick}'s stopwatch is at #{format_time(time)}!"
     else
@@ -66,9 +68,9 @@ class Timing < PluginBase
   end
 
   def reset_stopwatch m
-    time = $watches[m.user.nick]
+    time = @@watches[m.user.nick]
     if time
-      $watches[m.user.nick] = Time.now
+      @@watches[m.user.nick] = Time.now
       m.reply "#{m.user.nick}'s stopwatch was restarted!"
     else
       m.reply "#{m.user.nick} has not started a stopwatch! First !start one."
@@ -77,24 +79,24 @@ class Timing < PluginBase
 
   def start_timer m, time
     start = Time.now
-    if $timers[m.user.nick]
+    if @@timers[m.user.nick]
       m.reply "#{m.user.nick} already has a timer running!"
     else
-      $timers[m.user.nick] = true
+      @@timers[m.user.nick] = true
       m.reply "#{m.user.nick}'s timer was started with #{format_time(start - time, true)}!"
-      while !$timers[m.user.nick] || Time.now < start + time
+      while !@@timers[m.user.nick] || Time.now < start + time
 
       end
-      if $timers[m.user.nick]
-        $timers[m.user.nick] = nil
+      if @@timers[m.user.nick]
+        @@timers[m.user.nick] = nil
         m.reply "#{m.user.nick}'s time is up!"
       end
     end
   end
 
   def cancel_timer m
-    if $timers[m.user.nick]
-      $timers[m.user.nick] = false
+    if @@timers[m.user.nick]
+      @@timers[m.user.nick] = false
       m.reply "#{m.user.nick}'s timer was cancelled."
     else
       m.reply "#{m.user.nick} has no timer running."

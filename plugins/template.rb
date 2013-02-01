@@ -7,6 +7,7 @@ class template < PluginBase
 	listen_to :private
 
 	def listen(m)
+	  if active?(m,"template")
 			begin
 				case m.message
 				when /^!help template$/
@@ -15,6 +16,7 @@ class template < PluginBase
 			rescue Exception => e
 				error(m,e)
 			end
+    end
 	end
 	
 	def template_method(m)

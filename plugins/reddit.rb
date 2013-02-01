@@ -8,27 +8,29 @@ class Reddit < PluginBase
 	@reddit = nil
 	
 	def listen(m)
-		unless @reddit
-			@reddit = true
-			begin
-				case m.message
-				when /^!r(ed(dit)?)? help$/
-					help(m, "!reddit")
-				when /^!r(ed(dit)?)?\b/
-					get_link(m)
-				when /#{$settings['settings']['nick']}/
-					get_link(m) if m.message.match(/\br(ed(dit)?)?\b/)
-				end
-					
-			rescue Exception => e
-			  if e.message.length < 256
-          error(m,e)
-        else
-          m.reply "No results."
+	  if active?(m,"reddit")
+      unless @reddit
+        @reddit = true
+        begin
+          case m.message
+          when /^!r(ed(dit)?)? help$/
+            help(m, "!reddit")
+          when /^!r(ed(dit)?)?\b/
+            get_link(m)
+          when /#{$settings['settings']['nick']}/
+            get_link(m) if m.message.match(/\br(ed(dit)?)?\b/)
+          end
+            
+        rescue Exception => e
+          if e.message.length < 256
+            error(m,e)
+          else
+            m.reply "No results."
+          end
         end
-			end
-			@reddit = nil
-		end
+        @reddit = nil
+      end
+    end
 	end
 	
 	def get_link(m)

@@ -20,29 +20,31 @@ class Nfl < PluginBase
 	end
 	
 	def listen(m)
-		unless @nfl
-			@nfl = true
-			begin
-				case m.message
-				when /^!help nfl$/
-					help(m, "!nfl")
-				when /^!nfl current$/
-					list_active_games(m)
-				when /^!nfl gamelist$/
-					list_weeks_games(m)
-				when /^!nfl$/
-					help(m, "!nfl")
-				when /!nfl (\S+) score$/
-					list_active_games(m,$1)
-				when /!nfl (\S+) game$/
-					list_weeks_games(m,$1)
-				end	
-					
-			rescue Exception => e
-				error(m,e)
-			end
-			@nfl = nil
-		end
+	  if active?(m,"nfl")
+      unless @nfl
+        @nfl = true
+        begin
+          case m.message
+          when /^!help nfl$/
+            help(m, "!nfl")
+          when /^!nfl current$/
+            list_active_games(m)
+          when /^!nfl gamelist$/
+            list_weeks_games(m)
+          when /^!nfl$/
+            help(m, "!nfl")
+          when /!nfl (\S+) score$/
+            list_active_games(m,$1)
+          when /!nfl (\S+) game$/
+            list_weeks_games(m,$1)
+          end	
+            
+        rescue Exception => e
+          error(m,e)
+        end
+        @nfl = nil
+      end
+    end
 	end
 	
 	def list_active_games(m, team = ".")

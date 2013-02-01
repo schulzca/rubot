@@ -7,18 +7,27 @@ class Speak < PluginBase
 	listen_to :channel
 	listen_to :private
 
+	@@json = nil
+	@@message_count = nil
+  @@end_of_line = nil
+  @@first = nil
+  @@total = nil
+
   def initialize(*args)
     super
-    @json = JSON.parse open($settings["settings"]["speak_path"]).read
-    @message_count = -1
-    @end_of_line = "<<<end of line>>>"
-    @first = "<<<first>>>"
-    @total = "<<<total>>>"
+    unless @@json
+      @@json = JSON.parse open($settings["settings"]["speak_path"]).read
+      @@message_count = -1
+      @@end_of_line = "<<<end of line>>>"
+      @@first = "<<<first>>>"
+      @@total = "<<<total>>>"
+    end
   end
 
 	def listen(m)
+	  if active?(m,"speak")
 			begin
-			  @message_count = (@message_count + 1) % 10
+			  @@message_count = (@@message_count + 1) % 10
 				case m.message
 				when /^!help speak$/
 					help(m, "!speak")
@@ -29,26 +38,27 @@ class Speak < PluginBase
         else
           store_grammar(m)
   			end
-        save_json if @message_count == 0
+        save_json if @@message_count == 0
 			rescue Exception => e
 				error(m,e)
 			end
+    end
 	end
 
   def generate_grammar(m, nick = nil)
-    hash = nick ? @json[":::#{nick}:::"] : eliminate_nick_dependance
+    hash = nick ? @@json[":::#{nick}:::"] : eliminate_nick_dependance
     message = ""
     if hash
-      key_three = get_random_word(hash[@first])
+      key_three = get_random_word(hash[@@first])
       key_two = nil
       key_one = nil
       message = key_three
-      until key_three.match @end_of_line 
+      until key_three.match @@end_of_line 
         new_word = get_random_word(hash["#{"#{key_one} " if key_one}#{"#{key_two} " if key_two}#{key_three}"])
         key_one = key_two
         key_two = key_three
         key_three = new_word
-        message += " #{new_word}" unless new_word.match @end_of_line
+        message += " #{new_word}" unless new_word.match @@end_of_line
       end
     else
       message = "#{nick} has been silent."
@@ -57,11 +67,11 @@ class Speak < PluginBase
   end
 
   def get_random_word(hash)
-    total = hash[@total]
+    total = hash[@@total]
     target = rand(total)
     word = nil
     hash.each do |key, value|
-      unless key.match(@total)
+      unless key.match(@@total)
         if value > target
           word = key
           break
@@ -75,7 +85,7 @@ class Speak < PluginBase
 
   def eliminate_nick_dependance
     gen = {}
-    @json.each do |nick, key_hash|
+    @@json.each do |nick, key_hash|
       key_hash.each do |seed_word,result_hash|
         result_hash.each do |result_word,count|
           if gen[seed_word]
@@ -95,24 +105,24 @@ class Speak < PluginBase
 
   def store_grammar(m)
     if m.user
-      words = m.message.split(/\s+/) << @end_of_line
+      words = m.message.split(/\s+/) << @@end_of_line
       one_ago = nil
       two_ago = nil
       three_ago = nil
       nick = ":::#{m.user.nick}:::"
-      @json[nick] = {@first => {@total => 0}} unless @json[nick]
+      @@json[nick] = {@@first => {@@total => 0}} unless @@json[nick]
       words.each do |word|
         word_key = "#{"#{three_ago} " if three_ago}#{"#{two_ago} " if two_ago}#{one_ago}"
-        word_key = @first if word_key.empty?
-        if @json[nick][word_key]
-          @json[nick][word_key][@total] += 1
-          if @json[nick][word_key][word]
-            @json[nick][word_key][word] += 1
+        word_key = @@first if word_key.empty?
+        if @@json[nick][word_key]
+          @@json[nick][word_key][@@total] += 1
+          if @@json[nick][word_key][word]
+            @@json[nick][word_key][word] += 1
           else
-            @json[nick][word_key][word] = 1
+            @@json[nick][word_key][word] = 1
           end
         else
-          @json[nick][word_key] = {@total => 1, word => 1}
+          @@json[nick][word_key] = {@@total => 1, word => 1}
         end
         three_ago = two_ago
         two_ago = one_ago
@@ -122,6 +132,6 @@ class Speak < PluginBase
   end
 
 	def save_json
-    File.open($settings["settings"]["speak_path"], 'w'){|f|f.write(@json.to_json)}
+    File.open($settings["settings"]["speak_path"], 'w'){|f|f.write(@@json.to_json)}
   end
 end

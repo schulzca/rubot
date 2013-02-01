@@ -6,36 +6,39 @@ class WordCount < PluginBase
 	listen_to :channel
 	listen_to :private
 	
-  @json = {}
+  @@json = {}
   def initialize(*args)
     super
-    @json = JSON.parse open($settings["settings"]["wordcount_path"]).read
+    unless @@json
+      @@json = JSON.parse open($settings["settings"]["wordcount_path"]).read
+    end
   end
 	
 	def listen(m)
-	  #User($master).send "Test update"
-	  if m.user != "nickserv"
-			begin
-			  update_tracker(m)
-				case m.message
-				when /^!help (wordcount|wc)$/
-					help(m, "!wordcount")
-				when /^!(wordcount|wc)(\s+leader)?$/
-				  display_leader(m)
-				when /^!(wordcount|wc)\s+(.+)$/
-				  display_count(m,$2)
-  			end
-  			write_tracker
-			rescue Exception => e
-				error(m,e)
-			end
+	  if active?(m,"word_count")
+      if m.user != "nickserv"
+        begin
+          update_tracker(m)
+          case m.message
+          when /^!help (wordcount|wc)$/
+            help(m, "!wordcount")
+          when /^!(wordcount|wc)(\s+leader)?$/
+            display_leader(m)
+          when /^!(wordcount|wc)\s+(.+)$/
+            display_count(m,$2)
+          end
+          write_tracker
+        rescue Exception => e
+          error(m,e)
+        end
+      end
     end
 	end
 
 	def write_tracker
     unless $writing_to_file
       $writing_to_file = true
-      File.open($settings["settings"]["wordcount_path"], 'w'){|f|f.write(@json.to_json)}
+      File.open($settings["settings"]["wordcount_path"], 'w'){|f|f.write(@@json.to_json)}
       $writing_to_file = false
     end
   end
@@ -44,8 +47,8 @@ class WordCount < PluginBase
 	  if m.user
       count = get_count_for_nick(m, m.user.nick)
       if count
-        @json[m.user.nick]["count"] = count + m.message.split(/\s+/).count
-        @json[m.user.nick]["channel"] = m.channel.name if m.channel
+        @@json[m.user.nick]["count"] = count + m.message.split(/\s+/).count
+        @@json[m.user.nick]["channel"] = m.channel.name if m.channel
       end
     end
   end
@@ -53,8 +56,8 @@ class WordCount < PluginBase
   def display_leader(m)
     name = nil
     words = 0
-    channel = @json[m.user.nick]["channel"]
-    @json.each do |nick, entry|
+    channel = @@json[m.user.nick]["channel"]
+    @@json.each do |nick, entry|
       channel_check = channel == entry["channel"] or !channel
       wc = get_count_for_nick(m,nick)
       if wc > words and channel_check
@@ -75,13 +78,13 @@ class WordCount < PluginBase
   end
 
   def get_count_for_nick(m,nick)
-    if @json[nick] and @json[nick]["count"]
-      count = @json[nick]["count"]
+    if @@json[nick] and @@json[nick]["count"]
+      count = @@json[nick]["count"]
     elsif m.channel and m.channel.users.collect{|u| u.first.nick}.include? nick
-      @json[nick] = {"count" => 0, "channel" => m.channel.name}
+      @@json[nick] = {"count" => 0, "channel" => m.channel.name}
       count = 0
     else 
-      @json[nick] = {"count" => 0}
+      @@json[nick] = {"count" => 0}
       count = 0
     end
   end
