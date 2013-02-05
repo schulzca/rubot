@@ -65,7 +65,7 @@ $irc  = Cinch::Bot.new do
     end
   end
 
-  on :message /^!(#{$settings['settings']['nick']}|about)$/ do |m|
+  on :message, /^!(#{$settings['settings']['nick']}|about)$/ do |m|
     if $settings['settings']['about']
       m.reply $settings['settings']['about']
     else
