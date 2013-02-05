@@ -8,7 +8,8 @@ Besides installing the cinch and cinch-identify gems, you'll need a bot.yml that
 
   settings:
     nick: my_cinch_bot
-    nickserv_pass: my_password
+    nickserv_pass: my_cinch_bot_password
+    about: 'This is my about message. Perhaps a repo?'
     master: my_nick
     level_path: file_path_to_store_json_for_experience_pluggin
     wordcount_path: file_path_to_store_json_for_wordcount_pluggin

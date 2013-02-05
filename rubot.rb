@@ -64,6 +64,14 @@ $irc  = Cinch::Bot.new do
       system("exit")
     end
   end
+
+  on :message /^!(#{$settings['settings']['nick']}|about)$/ do |m|
+    if $settings['settings']['about']
+      m.reply $settings['settings']['about']
+    else
+      m.reply 'No information has been provided.'
+    end
+  end
 end
 
 $irc.start
