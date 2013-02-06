@@ -50,7 +50,7 @@ $irc  = Cinch::Bot.new do
     m.user.send "Available topics: #{topics.join(", ")}\nLearn more with '!help <topic>'"
   end
   
-  on :message, /^!reload$/ do |m|
+  on :message, /^!(reload|restart)$/ do |m|
     if m.user == User($master)
       system("ruby rubot.rb &")
       $irc.quit 
