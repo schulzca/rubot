@@ -17,7 +17,7 @@ class PluginBase
 	listen_to :channel
 
   @@channel_plugins = nil
-  @prefix = nil
+  @prefix = ""
 	def initialize(*args)
     super
     unless @@channel_plugins
@@ -55,13 +55,20 @@ class PluginBase
     end
   end
 
+  def get_clone(m)
+    m2 = m.clone
+    m2.message = m.message.clone
+    m2
+  end
+
 	def listen(m)
 	  begin
+      m = get_clone(m)
       if m.message.match /^!give\s+(\S+)\s+(.*)$/
         @prefix = "#{$1}: "
         m.message = $2
       else
-        @prefix = nil
+        @prefix = ""
       end
       react_to_message(m)
     rescue Exception => e
@@ -70,14 +77,14 @@ class PluginBase
 	end
 
 	def reply(m,message)
-    m.reply(@prefix.to_s + message)
+    m.reply(@prefix + message)
   end
 
   def pm(user,message, send_to_prefix = true)
-    if send_to_prefix and @prefix
-      User(@prefix).send message
+    if send_to_prefix and not @prefix.empty?
+      User(@prefix[0..-3]).send message
     else
-      user.send(@prefix.to_s + message)
+      user.send(@prefix + message)
     end
   end
 
@@ -114,7 +121,7 @@ class PluginBase
       end
     end
     if changes.any?
-      reply(m,"#{changes.join(", ")} #{"de" unless value}activated") 
+      reply(m,"#{"de" unless value}activating #{changes.join(", ")}") 
     end
   end
 
@@ -133,7 +140,7 @@ class PluginBase
   end
 
 	def help(m,prefix)
-		$help_messages.each {|help| m.user.send(help) if help.start_with?(prefix)}
+		$help_messages.each {|help| pm(m.user,help) if help.start_with?(prefix)}
 	end
 	
 	def error(m,e)
