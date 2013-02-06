@@ -9,7 +9,7 @@ class GoogleThat < PluginBase
 
 	@@channels = nil
 	
-	def listen(m)
+	def react_to_message(m)
 	  if active?(m,"google_that")
       @@channels ||= {}
       track_channels(m)
@@ -38,7 +38,7 @@ class GoogleThat < PluginBase
         if m2.channel
           users = m2.channel.users.collect{|u| u.first.nick}
           if users.include? m.user.nick and users.include? user
-            m2.reply "#{user}: #{url}"
+            reply m2,"#{user}: #{url}"
           end
         end
       end

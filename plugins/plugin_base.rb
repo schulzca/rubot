@@ -2,6 +2,14 @@ require 'open-uri'
 require 'net/http'
 require 'json'
 require 'uri'
+#allow changing message text
+module Cinch
+  class Message
+    def message= text
+      @message = text
+    end
+  end
+end
 
 class PluginBase
 	include Cinch::Plugin
@@ -9,7 +17,7 @@ class PluginBase
 	listen_to :channel
 
   @@channel_plugins = nil
-
+  @prefix = nil
 	def initialize(*args)
     super
     unless @@channel_plugins
@@ -34,18 +42,44 @@ class PluginBase
     end
   end
 
+  def react_to_message(m)
+    case m.message
+    when /^!activate (.+)$/
+      set_active(m, $1, true)
+    when /^!deactivate (.+)$/
+      set_active(m, $1, false)
+    when /^!activate$/
+      set_all(m,true)
+    when /^!deactivate$/
+      set_all(m,false)
+    end
+  end
+
 	def listen(m)
-			begin
-				case m.message
-				when /^!activate (.+)$/
-					set_active(m, $1, true)
-				when /^!deactivate (.+)$/
-					set_active(m, $1, false)
-  			end
-			rescue Exception => e
-				error(m,e)
-			end
+	  begin
+      if m.message.match /^!give\s+(\S+)\s+(.*)$/
+        @prefix = "#{$1}: "
+        m.message = $2
+      else
+        @prefix = nil
+      end
+      react_to_message(m)
+    rescue Exception => e
+      error(m,e)
+    end
 	end
+
+	def reply(m,message)
+    m.reply(@prefix.to_s + message)
+  end
+
+  def pm(user,message, send_to_prefix = true)
+    if send_to_prefix and @prefix
+      User(@prefix).send message
+    else
+      user.send(@prefix.to_s + message)
+    end
+  end
 
 	def closest_match(attempt,actual)
 	  attempt_chars = attempt.split('').uniq
@@ -63,6 +97,24 @@ class PluginBase
         best_guess = $settings["settings"]["plugins"].sort_by{|option| closest_match(plugin,option)}.first
         m.reply "#{plugin} not available. Did you mean #{best_guess}?"
       end
+    end
+  end
+
+  def set_all(m,value)
+    changes = []
+	  if m.user.nick == $master
+      channel_name = m.channel.name.split(/\s+/).first
+      @@channel_plugins[channel_name].each do |key,val|
+        unless key.match "plugin_base"
+          if @@channel_plugins[channel_name][key] != value
+            @@channel_plugins[channel_name][key] = value
+            changes << key
+          end
+        end
+      end
+    end
+    if changes.any?
+      reply(m,"#{changes.join(", ")} #{"de" unless value}activated") 
     end
   end
 

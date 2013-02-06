@@ -14,7 +14,7 @@ class WordCount < PluginBase
     end
   end
 	
-	def listen(m)
+	def react_to_message(m)
 	  if active?(m,"word_count")
       if m.user != "nickserv"
         begin
@@ -65,15 +65,15 @@ class WordCount < PluginBase
         name = nick
       end
     end
-    m.reply "#{name} is in the lead with #{words} words."
+    reply m, "#{name} is in the lead with #{words} words."
   end
 
 	def display_count(m,nick)
     count = get_count_for_nick(m,nick)
     if count
-      m.reply "#{nick} has typed #{count} words."
+      reply m, "#{nick} has typed #{count} words."
     else
-      m.reply "#{nick} is not here."
+      reply m, "#{nick} is not here."
     end
   end
 

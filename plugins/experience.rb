@@ -27,7 +27,7 @@ class Experience < PluginBase
     end
   end
 
-	def listen(m)
+	def react_to_message(m)
 	  if active?(m,"experience")
       begin
         case m.message
@@ -58,7 +58,7 @@ class Experience < PluginBase
     if userlist(m).include? nick
       if(m.user.nick == nick)
         score = @@json[m.channel][nick]["exp"]
-        m.reply "#{nick} loses 50 exp for boasting."
+        reply m,"#{nick} loses 50 exp for boasting."
         score -= 50
         @@json[m.channel][nick]["exp"] = score
         save_json
@@ -66,7 +66,7 @@ class Experience < PluginBase
         give_points(m,nick,5)
       end
     else
-      m.reply "That user is not here."
+      reply m,"That user is not here."
     end
   end
 
@@ -74,7 +74,7 @@ class Experience < PluginBase
     if userlist(m).include? nick
       if(m.user.nick == nick)
         score = @@json[m.channel][nick]["exp"]
-        m.reply "#{nick} has Tyler Durden thing going on. 5 exp lost."
+        reply m, "#{nick} has Tyler Durden thing going on. 5 exp lost."
         score -= 5
         @@json[m.channel][nick]["exp"] = score
         save_json
@@ -82,7 +82,7 @@ class Experience < PluginBase
         lose_points(m,nick,5)
       end
     else
-      m.reply "That user is not here."
+      reply m, "That user is not here."
     end
   end
 
@@ -98,12 +98,12 @@ class Experience < PluginBase
     user = get_nick_data(m, nick)
     level = user["level"]
     exp = user["exp"]
-    m.reply random_good_reply(nick, amt)
+    reply m, random_good_reply(nick, amt)
     exp += amt
     if exp >= level * 10
       exp -= level * 10
       level += 1
-      m.reply "#{nick} leveled up to level #{level}!"
+      reply m, "#{nick} leveled up to level #{level}!"
     end
     @@json[m.channel][nick]["level"] = level
     @@json[m.channel][nick]["exp"] = exp
@@ -113,7 +113,7 @@ class Experience < PluginBase
   def lose_points(m,nick,amt)
     user = get_nick_data(m, nick)
     exp = user["exp"]
-    m.reply random_bad_reply(nick,amt)
+    reply m, random_bad_reply(nick,amt)
     exp -= amt
     @@json[m.channel][nick]["exp"] = exp
     save_json
@@ -136,16 +136,16 @@ class Experience < PluginBase
            response << "#{user}: Lvl: #{data['level']} Exp: #{data['exp']}"
         end
       end
-      m.user.send(response.join("\n")) unless response.empty?
+      pm(m, response.join("\n")) unless response.empty?
       save_json
     else
-      m.reply "Please do that in the channel."
+      reply m, "Please do that in the channel."
     end
   end
 
 	def send_level(m, nick)
 	  if nick_data = get_nick_data(m,nick)
-      m.reply "#{nick}: Lvl: #{nick_data['level']} Exp: #{nick_data['exp']}"
+      reply m, "#{nick}: Lvl: #{nick_data['level']} Exp: #{nick_data['exp']}"
       save_json
     end
   end
@@ -159,7 +159,7 @@ class Experience < PluginBase
           @@json[m.channel][user] = {"level" => 1, "exp" => 0}
           return @@json[m.channel][user] 
         else 
-          m.reply "That person isn't here."
+          reply m, "That person isn't here."
           return nil
         end
       else
@@ -167,7 +167,7 @@ class Experience < PluginBase
         return @@json[m.channel][user]
       end
     else
-      m.reply "Please do that in the channel."
+      reply m, "Please do that in the channel."
       return nil
     end
   end

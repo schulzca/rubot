@@ -4,7 +4,7 @@ class PluginManager < PluginBase
 	listen_to :channel
 	listen_to :private
 	
-	def listen(m)
+	def react_to_message(m)
 			begin
 				case m.message
 				when /^!update$/
@@ -46,7 +46,7 @@ class PluginManager < PluginBase
     begin 
       plugin_class = Cinch::Plugins.const_get(plugin)
     rescue NameError
-      User($master).send "No #{plugin} class found."
+      pm User($master),"No #{plugin} class found."
       return
     end
 
@@ -90,7 +90,7 @@ class PluginManager < PluginBase
     names.count.times do |index|
       load_plugin(m,classes[index], names[index]) unless names[index] == 'plugin_manager'
     end
-    User($master).send "Done updating."
+    pm User($master),"Done updating."
   end
 
 end

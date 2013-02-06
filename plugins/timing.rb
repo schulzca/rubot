@@ -14,7 +14,7 @@ class Timing < PluginBase
 	@@watches = {}
 	@@timers = {}
 
-	def listen(m)
+	def react_to_message(m)
 	  if active?(m,"timing")
       begin
         case m.message
@@ -41,29 +41,29 @@ class Timing < PluginBase
 
 	def start_stopwatch m
     if @@watches[m.user.nick]
-      m.reply "#{m.user.nick} already has a stopwatch running! Either !stop it or !reset it."
+      reply m, "#{m.user.nick} already has a stopwatch running! Either !stop it or !reset it."
     else
       @@watches[m.user.nick] = Time.now
-      m.reply "#{m.user.nick}'s stopwatch was started!"
+      reply m, "#{m.user.nick}'s stopwatch was started!"
     end
   end
 
   def stop_stopwatch m   
     time = @@watches[m.user.nick]
     if time
-      m.reply "#{m.user.nick}'s stopwatch was stopped at #{format_time(time)}!"
+      reply m, "#{m.user.nick}'s stopwatch was stopped at #{format_time(time)}!"
       @@watches[m.user.nick] = nil
     else
-      m.reply "#{m.user.nick} has no stopwatch to stop! First !start one."
+      reply m, "#{m.user.nick} has no stopwatch to stop! First !start one."
     end
   end
 
   def peek_stopwatch m
     time = @@watches[m.user.nick]
     if time
-      m.reply "#{m.user.nick}'s stopwatch is at #{format_time(time)}!"
+      reply m, "#{m.user.nick}'s stopwatch is at #{format_time(time)}!"
     else
-      m.reply "#{m.user.nick} has not started a stopwatch! First !start one."
+      reply m, "#{m.user.nick} has not started a stopwatch! First !start one."
     end
   end
 
@@ -71,25 +71,25 @@ class Timing < PluginBase
     time = @@watches[m.user.nick]
     if time
       @@watches[m.user.nick] = Time.now
-      m.reply "#{m.user.nick}'s stopwatch was restarted!"
+      reply m, "#{m.user.nick}'s stopwatch was restarted!"
     else
-      m.reply "#{m.user.nick} has not started a stopwatch! First !start one."
+      reply m, "#{m.user.nick} has not started a stopwatch! First !start one."
     end
   end
 
   def start_timer m, time
     start = Time.now
     if @@timers[m.user.nick]
-      m.reply "#{m.user.nick} already has a timer running!"
+      reply m, "#{m.user.nick} already has a timer running!"
     else
       @@timers[m.user.nick] = true
-      m.reply "#{m.user.nick}'s timer was started with #{format_time(start - time, true)}!"
+      reply m, "#{m.user.nick}'s timer was started with #{format_time(start - time, true)}!"
       while !@@timers[m.user.nick] || Time.now < start + time
 
       end
       if @@timers[m.user.nick]
         @@timers[m.user.nick] = nil
-        m.reply "#{m.user.nick}'s time is up!"
+        reply m, "#{m.user.nick}'s time is up!"
       end
     end
   end
@@ -97,9 +97,9 @@ class Timing < PluginBase
   def cancel_timer m
     if @@timers[m.user.nick]
       @@timers[m.user.nick] = false
-      m.reply "#{m.user.nick}'s timer was cancelled."
+      reply m, "#{m.user.nick}'s timer was cancelled."
     else
-      m.reply "#{m.user.nick} has no timer running."
+      reply m, "#{m.user.nick} has no timer running."
     end
   end
 

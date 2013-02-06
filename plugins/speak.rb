@@ -24,7 +24,7 @@ class Speak < PluginBase
     end
   end
 
-	def listen(m)
+	def react_to_message(m)
 	  if active?(m,"speak")
 			begin
 			  @@message_count = (@@message_count + 1) % 10
@@ -63,7 +63,7 @@ class Speak < PluginBase
     else
       message = "#{nick} has been silent."
     end
-    m.reply message
+    reply m,message
   end
 
   def get_random_word(hash)

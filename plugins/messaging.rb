@@ -13,7 +13,7 @@ class Messaging < PluginBase
     @@json ||= {}
   end
 
-	def listen(m)
+	def react_to_message(m)
 	  if @@json
 			begin
 				case m.message
@@ -48,7 +48,7 @@ class Messaging < PluginBase
 
 	def send_messages(m,nick)  
 	  @@json[nick].each do |key, val|
-      m.user.send @@json[nick].delete(key).to_s
+      pm @m.user,@json[nick].delete(key).to_s
     end
 	end
 end

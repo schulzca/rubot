@@ -7,7 +7,7 @@ class Reddit < PluginBase
 
 	@reddit = nil
 	
-	def listen(m)
+	def react_to_message(m)
 	  if active?(m,"reddit")
       unless @reddit
         @reddit = true
@@ -25,7 +25,7 @@ class Reddit < PluginBase
           if e.message.length < 256
             error(m,e)
           else
-            m.reply "No results."
+            reply m,"No results."
           end
         end
         @reddit = nil
@@ -39,7 +39,7 @@ class Reddit < PluginBase
 		sub   = m.message.match(/r\/(\S+)/) ? "r/#{$1}/" : ""
 		count = count < 0 ? 0 : count
 		if count > 100
-			m.reply "I can only search up to post 100"
+			reply m,"I can only search up to post 100"
 		end
 		count = count > 99 ? 99 : count
 		if limit
@@ -47,7 +47,7 @@ class Reddit < PluginBase
 			json = JSON.parse open(url).read
 			unless json['error'] == 403
         data = json["data"]["children"][count]["data"]	
-        m.reply "#{data["over_18"] ? "(NSFW) " : ""}#{data["title"]} | #{data["url"]}"
+        reply m,"#{data["over_18"] ? "(NSFW) " : ""}#{data["title"]} | #{data["url"]}"
       else
         m.replty "No results."
       end
@@ -58,13 +58,13 @@ class Reddit < PluginBase
         json["data"]["children"].each do |post|
           data = post["data"]
           if(data["domain"].match(/imgur/) && post_number >= count)
-            m.reply "#{data["title"]}#{data["over_18"] ? " (NSFW)" : ""} | #{data["url"]}"
+            reply m,"#{data["title"]}#{data["over_18"] ? " (NSFW)" : ""} | #{data["url"]}"
             break
           end
           post_number += 1
         end
       else
-        m.reply "No results."
+        reply m,"No results."
       end
 		end
 	end

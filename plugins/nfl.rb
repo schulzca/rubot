@@ -19,7 +19,7 @@ class Nfl < PluginBase
 		super
 	end
 	
-	def listen(m)
+	def react_to_message(m)
 	  if active?(m,"nfl")
       unless @nfl
         @nfl = true
@@ -61,7 +61,7 @@ class Nfl < PluginBase
 					result =  "#{result}#{home} (#{hscore}) vs #{away} (#{ascore}) #{qtr if qtr == "Final"}\n"
 				end
 			end
-			m.reply result unless result.empty?
+			reply(m,result) unless result.empty?
 		rescue Exception => e
 			error(m,e)
 		end
@@ -89,7 +89,7 @@ class Nfl < PluginBase
 					result = "#{result}#{h} #{hnn} vs #{v} #{vnn} (#{day}: #{time})\n"
 				end
 			end
-			m.reply result unless result.empty?
+			reply(m, result) unless result.empty?
 		rescue Exception => e
 			error(m,e)
 		end

@@ -10,7 +10,7 @@ class Rhyme < PluginBase
 		super
 	end
 	
-	def listen(m)
+	def react_to_message(m)
 	  if active?(m,"rhyme")
       unless @rhyme
         @rhyme = true
@@ -39,7 +39,7 @@ class Rhyme < PluginBase
 			@words.each do |word_info|
 				word_array << word_info["word"] if word_info["score"] == 300
 			end
-			m.reply "#{m.user.nick}: Words that rhyme with #{word}: #{word_array.join(", ")}" unless word_array.empty?
+			reply(m,"#{m.user.nick}: Words that rhyme with #{word}: #{word_array.join(", ")}") unless word_array.empty?
 		rescue Exception => e
 			error(m,e)
 		end

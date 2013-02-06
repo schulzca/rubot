@@ -9,7 +9,7 @@ class Repeater < PluginBase
     names.join(' ') unless names.empty?
   end
 
-  def listen(m)
+  def react_to_message(m)
     if active?(m,"repeater")
       begin
         case m.message
@@ -27,9 +27,9 @@ class Repeater < PluginBase
   def ping_all(m, message)
     if m.channel
       n = nicks(m)
-      m.reply "#{nicks(m)}:#{message}"
+      reply m,"#{nicks(m)}:#{message}"
     else
-      m.reply "We're the only ones here..."
+      reply m,"We're the only ones here..."
     end
   end
 end

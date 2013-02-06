@@ -6,7 +6,7 @@ class template < PluginBase
 	listen_to :channel
 	listen_to :private
 
-	def listen(m)
+	def react_to_message(m)
 	  if active?(m,"template")
 			begin
 				case m.message
