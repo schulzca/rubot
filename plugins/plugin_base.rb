@@ -18,8 +18,10 @@ class PluginBase
 
   @@channel_plugins = nil
   @prefix = ""
+  @memory ||= {}
 	def initialize(*args)
     super
+    @memory ||= {}
     unless @@channel_plugins
       @@channel_plugins = {}
       $settings["settings"]["channel"].each do |channel|
@@ -89,9 +91,18 @@ class PluginBase
   end
 
 	def closest_match(attempt,actual)
-	  attempt_chars = attempt.split('').uniq
-	  actual_chars = actual.split('').uniq
-	  (attempt_chars + actual_chars).uniq.length * 1.0 / (attempt_chars.length + actual_chars.length)
+    key = [attempt,actual].join(',')
+    return @memory[key] if @memory[key]
+    return attempt.length if actual.length == 0
+    return actual.length if attempt.length == 0
+
+    cost = (actual[0] == attempt[0]) ? 0 : 1
+    distance = [closest_match(attempt[1..-1],actual) + 1,
+                closest_match(attempt,actual[1..-1]) + 1,
+                closest_match(attempt[1..-1], actual[1..-1]) + cost].min
+
+    @memory[key] = distance
+    return distance
   end
 
 	def set_active(m,plugin,value)
