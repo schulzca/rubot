@@ -54,17 +54,11 @@ $irc  = Cinch::Bot.new do
   end
 
   on :message, /^!help$/ do |m|
-    $help_messages.each{|message| m.user.send message }
+    topics = $help_messages.map{|message| message.split(/\s+/)[0].gsub(/[!:]/,"") }.uniq
+    m.user.send "Available topics: #{topics.join(", ")}\nLearn more with '!help <topic>'"
   end
 
-  on :message, /^!unsummon$/ do |m|
-    if m.user == User($master)
-      $irc.quit
-      system("exit")
-    end
-  end
-
-  on :message, /^!unsummon #{$settings["settings"]["nick"]}$/ do |m|
+  on :message, /^!unsummon( #{$settings["settings"]["nick"]})?$/ do |m|
     if m.user == User($master)
       $irc.quit
       system("exit")
