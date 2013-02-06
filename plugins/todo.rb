@@ -85,7 +85,7 @@ class Todo < PluginBase
     items = @@json[m.user.nick]
     if items
       if items.size >= number and number > 0
-        items.delete(number - 1)
+        items.delete_at(number - 1)
         @@json[m.user.nick] = items
       elsif number < 1
         message = "#{m.user.nick}: The item number must be positive."
