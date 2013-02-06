@@ -10,7 +10,7 @@ class Todo < PluginBase
 	listen_to :channel
 	listen_to :private
 	
-  @@json = {}
+  @@json = nil
   @writing_to_file = false
   def initialize(*args)
     super

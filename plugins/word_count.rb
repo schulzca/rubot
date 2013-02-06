@@ -6,7 +6,7 @@ class WordCount < PluginBase
 	listen_to :channel
 	listen_to :private
 	
-  @@json = {}
+  @@json = nil
   def initialize(*args)
     super
     unless @@json
