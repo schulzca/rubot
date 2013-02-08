@@ -57,7 +57,8 @@ class Experience < PluginBase
 	def give_props(m,nick)
     if userlist(m).include? nick
       if(m.user.nick == nick)
-        score = @@json[m.channel][nick]["exp"]
+        user = get_nick_data(nick)
+        score = nick["exp"]
         reply m,"#{nick} loses 50 exp for boasting."
         score -= 50
         @@json[m.channel][nick]["exp"] = score
@@ -73,7 +74,8 @@ class Experience < PluginBase
 	def smack(m,nick)
     if userlist(m).include? nick
       if(m.user.nick == nick)
-        score = @@json[m.channel][nick]["exp"]
+        user = get_nick_data(nick)
+        score = user["exp"]
         reply m, "#{nick} has Tyler Durden thing going on. 5 exp lost."
         score -= 5
         @@json[m.channel][nick]["exp"] = score
