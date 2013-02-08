@@ -51,7 +51,7 @@ class Experience < PluginBase
 	end
 
   def userlist(m)
-    m.channel.users.collect{|u| u.first.nick}
+    m.channel ? m.channel.users.collect{|u| u.first.nick} : []
   end
 
 	def give_props(m,nick)
