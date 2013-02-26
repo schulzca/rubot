@@ -106,11 +106,10 @@ class Speak < PluginBase
       words = m.message.split(/\s+/) << @@end_of_line
       one_ago = nil
       two_ago = nil
-      three_ago = nil
       nick = ":::#{m.user.nick}:::"
       @@json[nick] = {@@first => {@@total => 0}} unless @@json[nick]
       words.each do |word|
-        word_key = "#{"#{three_ago} " if three_ago}#{"#{two_ago} " if two_ago}#{one_ago}"
+        word_key = "#{"#{two_ago} " if two_ago}#{one_ago}"
         word_key = @@first if word_key.empty?
         if @@json[nick][word_key]
           @@json[nick][word_key][@@total] += 1
@@ -122,7 +121,6 @@ class Speak < PluginBase
         else
           @@json[nick][word_key] = {@@total => 1, word => 1}
         end
-        three_ago = two_ago
         two_ago = one_ago
         one_ago = word
       end
