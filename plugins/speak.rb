@@ -49,15 +49,13 @@ class Speak < PluginBase
     hash = nick ? @@json[":::#{nick}:::"] : eliminate_nick_dependance
     message = ""
     if hash
-      key_three = get_random_word(hash[@@first])
-      key_two = nil
+      key_two = get_random_word(hash[@@first])
       key_one = nil
-      message = key_three
-      until key_three.match @@end_of_line 
-        new_word = get_random_word(hash["#{"#{key_one} " if key_one}#{"#{key_two} " if key_two}#{key_three}"])
+      message = key_two
+      until key_two.match @@end_of_line 
+        new_word = get_random_word(hash["#{"#{key_one} " if key_one}#{key_two}"])
         key_one = key_two
-        key_two = key_three
-        key_three = new_word
+        key_two = new_word
         message += " #{new_word}" unless new_word.match @@end_of_line
       end
     else
