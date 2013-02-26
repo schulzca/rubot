@@ -48,7 +48,7 @@ class Messaging < PluginBase
 
 	def send_messages(m,nick)  
 	  @@json[nick].each do |key, val|
-      pm @m.user,@json[nick].delete(key).to_s
+      pm m.user,@@json[nick].delete(key).to_s
     end
 	end
 end
