@@ -44,11 +44,6 @@ $irc  = Cinch::Bot.new do
       :type     => :nickserv
     }
   end
-
-  on :message, /^!help$/ do |m|
-    topics = $help_messages.map{|message| message.split(/\s+/)[0].gsub(/[!:]/,"") }.uniq
-    m.user.send "Available topics: #{topics.join(", ")}\nLearn more with '!help <topic>'"
-  end
   
   on :message, /^!(reload|restart)$/ do |m|
     if m.user == User($master)
