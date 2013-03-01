@@ -4,8 +4,8 @@ class Meme < PluginBase
   include Cinch::Plugin
 
   IMAGES = {"fry" => "Futurama-Fry",
-            "sap" => "Social-Awkward-Penguin",
-            "social awkward penguin" => "Social-Awkward-Penguin",
+            "sap" => "Socially-Awkward-Penguin",
+            "socially awkward penguin" => "Socially-Awkward-Penguin",
             "success kid" => "Success-Kid",
             "sk" => "Success-Kid",
             "y u no" => "Y-U-No",
@@ -28,7 +28,7 @@ class Meme < PluginBase
             "insanity wolf" => "Insanity-Wolf",
             "iw" => "Insanity-Wolf"}
 
-	$help_messages << "!meme <img>|<top>|<bottom>   Generate a meme!"
+	$help_messages << "!meme <meme>|<top>|<bottom>   Generate a meme!"
 	$help_messages << "!meme Available Meme Names: #{IMAGES.keys.join(", ")}"
 
 
