@@ -3,8 +3,6 @@ class Achieve < PluginBase
   include Cinch::Plugin
 
 	$help_messages << "!achieve <number> <message>   Generate an achievement worth <number> points"
-	$help_messages << "!achievement <number> <message>   Generate an achievement worth <number> points"
-	$help_messages << "!achievement unlocked <number> <message>   Generate an achievement worth <number> points"
 
 	listen_to :channel
 	listen_to :private
