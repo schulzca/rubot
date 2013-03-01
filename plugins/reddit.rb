@@ -13,7 +13,7 @@ class Reddit < PluginBase
         @reddit = true
         begin
           case m.message
-          when /^!r(ed(dit)?)? help$/
+          when /^!help r(ed(dit)?)?$/
             help(m, "!reddit")
           when /^!r(ed(dit)?)?\b/
             get_link(m)
