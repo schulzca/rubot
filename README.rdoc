@@ -38,6 +38,7 @@ Besides installing the cinch and cinch-identify gems, you'll need a bot.yml that
 [experience]  Turn irc into an RPG
 [google_that]  Give someone a lmgtfy link
 [help]  Learn about the plugins
+[meme]  Generate a meme
 [messaging]  Send messages that offline users will receive when they are back
 [nfl]  Shows gamelist or scores for current week
 [plugin_manager]  Reload plugins without restarting the bot
