@@ -60,7 +60,7 @@ class PluginBase
       set_all(m,false)
     else
       if m.user and m.user.nick == $master and not @prefix.empty?
-        reply(m, m.message) 
+        reply(m, m.message) unless m.message.match /^\!/
       end
     end
   end
@@ -105,6 +105,10 @@ class PluginBase
         end
         m.reply(message)
       else
+        message = message.gsub(/^\S+:\s/,"#{@prefix}")
+        unless message.match @prefix
+          message = @prefix + message
+        end
         broadcast(m,@prefix[0..-3],message)
       end
     else
