@@ -33,17 +33,23 @@ Besides installing the cinch and cinch-identify gems, you'll need a bot.yml that
       - "Coming Soon"
 
 === Capabilities
-[plugin_manager]  Reload plugins without restarting the bot
-[repeater]  Pings everyone else in the chat. (ecruby/chatbot)
-[nfl]  Shows gamelist or scores for current week
-[reddit]  Access reddit in various ways
-[rhyme]  Become a poet!
-[timing]  Stopwatches and timers for everyone!		
+[achieve]  Unlock an achievement!
+[base_math]  Do math, with base conversions
 [experience]  Turn irc into an RPG
-[word_count]  Track how many words everyone has said
+[google_that]  Give someone a lmgtfy link
+[help]  Learn about the plugins
 [messaging]  Send messages that offline users will receive when they are back
+[nfl]  Shows gamelist or scores for current week
+[plugin_manager]  Reload plugins without restarting the bot
+[reddit]  Access reddit in various ways
+[repeater]  Pings everyone else in the chat. (ecruby/chatbot)
+[rhyme]  Become a poet!
+[roll]  Roll dice
 [summon]  Summon minions!
 [speak]  Have rubot generate (irc|specific user)-like talk
+[timing]  Stopwatches and timers for everyone!		
+[todo]  A todo list for each user		
+[word_count]  Track how many words everyone has said
 
 
 === Things to Add
