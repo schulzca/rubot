@@ -79,7 +79,10 @@ class PluginBase
 	end
 
 	def reply(m,message)
-    m.reply(@prefix + message)
+	  unless @prefix.empty?
+      message = message.gsub(/^\S+:\s/,"#{@prefix}")
+    end
+    m.reply(message)
   end
 
   def pm(user,message, send_to_prefix = true)
