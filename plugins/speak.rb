@@ -1,7 +1,7 @@
 class Speak < PluginBase
   include Cinch::Plugin
 
-	$help_messages << "!speak               Generate a random sentence from all of it's stored grammar"
+	$help_messages << "!speak               Generate a random sentence from all of its stored grammar"
 	$help_messages << "!speak like <nick>   Generate a random sentence by using <nick>'s grammar"
 
 	listen_to :channel
