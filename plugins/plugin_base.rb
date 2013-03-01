@@ -15,6 +15,7 @@ class PluginBase
 	include Cinch::Plugin
 
 	listen_to :channel
+	listen_to :private
 
   @@channel_plugins = nil
   @prefix = ""
@@ -55,6 +56,10 @@ class PluginBase
       set_all(m,true)
     when /^!deactivate$/
       set_all(m,false)
+    else
+      if m.user and m.user.nick == $master and not @prefix.empty?
+        reply(m, m.message) 
+      end
     end
   end
 
@@ -126,33 +131,41 @@ class PluginBase
   end
 
 	def set_active(m,plugin,value)
-	  if m.user.nick == $master
-      channel_name = m.channel.name.split(/\s+/).first
-      if @@channel_plugins[channel_name][plugin] != nil
-        @@channel_plugins[channel_name][plugin] = value
-        m.reply "#{plugin} #{"de" unless value}activated."
-      else
-        best_guess = $settings["settings"]["plugins"].sort_by{|option| closest_match(plugin,option)}.first
-        m.reply "#{plugin} not available. Did you mean #{best_guess}?"
+	  if m.channel
+      if m.user.nick == $master
+        channel_name = m.channel.name.split(/\s+/).first
+        if @@channel_plugins[channel_name][plugin] != nil
+          @@channel_plugins[channel_name][plugin] = value
+          m.reply "#{plugin} #{"de" unless value}activated."
+        else
+          best_guess = $settings["settings"]["plugins"].sort_by{|option| closest_match(plugin,option)}.first
+          m.reply "#{plugin} not available. Did you mean #{best_guess}?"
+        end
       end
+    else
+      m.reply "Please do that in a channel."
     end
   end
 
   def set_all(m,value)
-    changes = []
-	  if m.user.nick == $master
-      channel_name = m.channel.name.split(/\s+/).first
-      @@channel_plugins[channel_name].each do |key,val|
-        unless key.match "plugin_base"
-          if @@channel_plugins[channel_name][key] != value
-            @@channel_plugins[channel_name][key] = value
-            changes << key
+    if m.channel
+      changes = []
+      if m.user.nick == $master
+        channel_name = m.channel.name.split(/\s+/).first
+        @@channel_plugins[channel_name].each do |key,val|
+          unless key.match "plugin_base"
+            if @@channel_plugins[channel_name][key] != value
+              @@channel_plugins[channel_name][key] = value
+              changes << key
+            end
           end
         end
       end
-    end
-    if changes.any?
-      reply(m,"#{"de" unless value}activating #{changes.join(", ")}") 
+      if changes.any?
+        reply(m,"#{"de" unless value}activating #{changes.join(", ")}") 
+      end
+    else
+      m.reply "Please do that in a channel"
     end
   end
 
