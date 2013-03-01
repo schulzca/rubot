@@ -26,10 +26,36 @@ class Meme < PluginBase
             "scumbag steve" => "Scumbag-Steve",
             "ss" => "Scumbag-Steve",
             "insanity wolf" => "Insanity-Wolf",
-            "iw" => "Insanity-Wolf"}
+            "iw" => "Insanity-Wolf",
+            "grumpy cat" => "Grumpy-Cat-1",
+            "gc" => "Grumpy-Cat-1",
+            "bad luck brian" => "Bad-Luck-Brian-Meme",
+            "blb" => "Bad-Luck-Brian-Meme",
+            "what if i told you" => "What-If-I-Told-You-Meme",
+            "wiity" => "What-If-I-Told-You-Meme",
+            "all the things" => "All-The-Things",
+            "att" => "All-The-Things",
+            "yo dawg" => "Yo-Dawg",
+            "yd" => "Yo-Dawg",
+            "prepare yourself" => "Prepare-Yourself",
+            "py" => "Prepare-Yourself",
+            "annoying facebook girl" => "Annoying-Facebook-Girl",
+            "afg" => "Annoying-Facebook-Girl",
+            "conspiracy keanu" => "Conspiracy-Keanu",
+            "ck" => "Conspiracy-Keanu",
+            "i dont always" => "I-Dont-Always",
+            "ida" => "I-Dont-Always",
+            "stoner stanley" => "Stoner-Stanley",
+            "correction guy" => "Correction-Guy",
+            "cg" => "Correction-Guy",
+            "troll face" => "Troll-Face",
+            "tf" => "Troll-Face",
+            "joseph decreux" => "Joseph-Decreux",
+            "jd" => "Joseph-Decreux"
+  }
 
 	$help_messages << "!meme <meme>|<top>|<bottom>   Generate a meme!"
-	$help_messages << "!meme Available Meme Names: #{IMAGES.keys.join(", ")}"
+	$help_messages << "!meme Available Meme Names: #{IMAGES.keys.sort.join(", ")}"
 
 
 	listen_to :channel
@@ -41,7 +67,7 @@ class Meme < PluginBase
 				case m.message
 				when /^!help meme$/
 					help(m, "!meme")
-        when /^!meme (.+)\|(.+)\|(.+)$/
+        when /^!meme (.+)\|(.+)\|(.*)$/
           generate_meme(m, $1, $2, $3)
   			end
 			rescue Exception => e
