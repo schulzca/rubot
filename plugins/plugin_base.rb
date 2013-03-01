@@ -17,12 +17,14 @@ class PluginBase
 	listen_to :channel
 	listen_to :private
 
+  @@channels ||= nil
   @@channel_plugins = nil
   @prefix = ""
   @private = false
   @memory ||= {}
 	def initialize(*args)
     super
+    @@channels ||= {}
     @memory ||= {}
     unless @@channel_plugins
       @@channel_plugins = {}
@@ -84,6 +86,7 @@ class PluginBase
         @private = false
         @prefix = ""
       end
+      track_channels(m)
       react_to_message(m)
     rescue Exception => e
       error(m,e)
@@ -95,17 +98,35 @@ class PluginBase
       if @private
         message = message.gsub(/^\S+:\s/,"")
         User(@prefix[0..-3]).send message
-      else
+      elsif m.channel
         message = message.gsub(/^\S+:\s/,"#{@prefix}")
         unless message.match @prefix
           message = @prefix + message
         end
         m.reply(message)
+      else
+        broadcast(m,@prefix[0..-3],message)
       end
     else
       m.reply(message)
     end
   end
+
+	def track_channels(m)
+    @@channels[m.channel.to_s] = m if m.channel
+  end
+
+	def broadcast(m,user,message)
+    @@channels.each do |c,m2|
+      if m2.channel
+        users = m2.channel.users.collect{|u| u.first.nick}
+        if users.include? m.user.nick and users.include? user
+          reply m2,"#{user}: #{message}"
+        end
+      end
+    end
+	end
+
 
   def pm(user,message, send_to_prefix = true)
     if send_to_prefix and not @prefix.empty?
