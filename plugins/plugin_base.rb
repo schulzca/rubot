@@ -18,6 +18,7 @@ class PluginBase
 
   @@channel_plugins = nil
   @prefix = ""
+  @private = false
   @memory ||= {}
 	def initialize(*args)
     super
@@ -68,8 +69,14 @@ class PluginBase
       m = get_clone(m)
       if m.message.match /^!give\s+(\S+)\s+(.*)$/
         @prefix = "#{$1}: "
+        @private = false
+        m.message = $2
+      elsif m.message.match /^!send\s+(\S+)\s+(.*)$/
+        @prefix = "#{$1}: "
+        @private = true
         m.message = $2
       else
+        @private = false
         @prefix = ""
       end
       react_to_message(m)
@@ -80,12 +87,19 @@ class PluginBase
 
 	def reply(m,message)
 	  unless @prefix.empty?
-      message = message.gsub(/^\S+:\s/,"#{@prefix}")
-      unless message.match @prefix
-        message = @prefix + message
+      if @private
+        message = message.gsub(/^\S+:\s/,"")
+        User(@prefix[0..-3]).send message
+      else
+        message = message.gsub(/^\S+:\s/,"#{@prefix}")
+        unless message.match @prefix
+          message = @prefix + message
+        end
+        m.reply(message)
       end
+    else
+      m.reply(message)
     end
-    m.reply(message)
   end
 
   def pm(user,message, send_to_prefix = true)
