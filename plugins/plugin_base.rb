@@ -81,6 +81,9 @@ class PluginBase
 	def reply(m,message)
 	  unless @prefix.empty?
       message = message.gsub(/^\S+:\s/,"#{@prefix}")
+      unless message.match @prefix
+        message = @prefix + message
+      end
     end
     m.reply(message)
   end
