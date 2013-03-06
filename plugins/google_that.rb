@@ -6,13 +6,9 @@ class GoogleThat < PluginBase
 
 	listen_to :channel
 	listen_to :private
-
-	@@channels = nil
 	
 	def react_to_message(m)
 	  if active?(m,"google_that")
-      @@channels ||= {}
-      track_channels(m)
 			begin
 				case m.message
 				when /^!help gt$/
