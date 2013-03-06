@@ -92,6 +92,7 @@ class PluginBase
 
 	def validate_recipient(m, recipient)
     channels = $settings['settings']['channel'].map{|channel| channel.split(/\s+/).first}
+    channels = channels.select{|c| Channel(c).users.map{|u| u.first.nick}.include? m.user.nick}
     users = []
     channels.each do |channel|                                              
       users << Channel(channel).users.map{|user| user.first.nick}
