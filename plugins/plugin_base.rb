@@ -91,14 +91,14 @@ class PluginBase
 	end
 
 	def validate_recipient(m, recipient)
-    channels = $settings['settings']['channel'].map{|channel| channel.split(/\s+/).first}
-    channels = channels.select{|c| Channel(c).users.map{|u| u.first.nick}.include? m.user.nick}
+    channels = @bot.channels
+    channels = channels.select{|c| c.users.map{|u| u.first.nick}.include? m.user.nick}
     users = []
     channels.each do |channel|                                              
-      users << Channel(channel).users.map{|user| user.first.nick}
+      users << channel.users.map{|user| user.first.nick}
     end
     users.flatten!
-    choices = channels + users.uniq
+    choices = channels.map{|c| c.name} + users.uniq
 
     unless choices.include?(recipient)
       best_guess = choices.sort_by{|option| closest_match(recipient,option)}.first
@@ -111,8 +111,8 @@ class PluginBase
 	def reply(m,message)
 	  unless @prefix.empty?
 	    if validate_recipient(m,@prefix[0..-3])
-        if $settings['settings']['channel'].include? @prefix[0..-3]
-          Channel(@prefix[0..-3]).send message.gsub(/^\S+:\s/,"")
+        if @prefix.match(/^#/)
+          @bot.channels.select{|c| c.name == @prefix[0..-3]}.first.send message.gsub(/^\S+:\s/,"")
         elsif @private
           User(@prefix[0..-3]).send message.gsub(/^\S+:\s/,"")
         elsif m.channel
@@ -130,10 +130,10 @@ class PluginBase
 
 	def broadcast(m,user,message)
 	  if validate_recipient(m, user)
-      $settings['settings']['channel'].map{|channel|channel.split(/\s+/).first}.each do |c|
-        users = Channel(c).users.collect{|u| u.first.nick}
+      @bot.channels.each do |c|
+        users = c.users.collect{|u| u.first.nick}
         if users.include? m.user.nick and users.include? user
-          Channel(c).send "#{user}: #{message}"
+          c.send "#{user}: #{message}"
         end
       end
     end
