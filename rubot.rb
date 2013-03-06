@@ -45,9 +45,9 @@ $irc  = Cinch::Bot.new do
     }
   end
   
-  on :message, /^!(reload|restart)$/ do |m|
+  on :message, /^!restart$/ do |m|
     if m.user == User($master)
-      system("ruby rubot.rb &")
+      system("(sleep 2; ruby rubot.rb) &")
       $irc.quit 
       system("exit")
     end
