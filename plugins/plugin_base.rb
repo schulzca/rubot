@@ -17,14 +17,12 @@ class PluginBase
 	listen_to :channel
 	listen_to :private
 
-  @@channels ||= nil
   @@channel_plugins = nil
   @prefix = ""
   @private = false
   @memory ||= {}
 	def initialize(*args)
     super
-    @@channels ||= {}
     @memory ||= {}
     unless @@channel_plugins
       @@channel_plugins = {}
@@ -86,41 +84,55 @@ class PluginBase
         @private = false
         @prefix = ""
       end
-      track_channels(m)
       react_to_message(m)
     rescue Exception => e
       error(m,e)
     end
 	end
 
+	def validate_recipient(m, recipient)
+    channels = $settings['settings']['channel'].map{|channel| channel.split(/\s+/).first}
+    users = []
+    channels.each do |channel|                                              
+      users << Channel(channel).users.map{|user| user.first.nick}
+    end
+    users.flatten!
+    choices = channels + users.uniq
+
+    unless choices.include?(recipient)
+      best_guess = choices.sort_by{|option| closest_match(recipient,option)}.first
+      m.reply "Could not find #{recipient}. Did you mean #{best_guess}?"
+      return false
+    end
+    return true
+  end
+
 	def reply(m,message)
 	  unless @prefix.empty?
-      if @private
-        message = message.gsub(/^\S+:\s/,"")
-        User(@prefix[0..-3]).send message
-      elsif m.channel
-        message = message.gsub(/^\S+:\s/,"")
-        message = @prefix + message
-        m.reply(message)
-      else
-        message = message.gsub(/^\S+:\s/,"")
-        broadcast(m,@prefix[0..-3],message)
+	    if validate_recipient(m,@prefix[0..-3])
+        if $settings['settings']['channel'].include? @prefix[0..-3]
+          Channel(@prefix[0..-3]).send message.gsub(/^\S+:\s/,"")
+        elsif @private
+          User(@prefix[0..-3]).send message.gsub(/^\S+:\s/,"")
+        elsif m.channel
+          message = message.gsub(/^\S+:\s/,"")
+          m.reply(@prefix + message )
+        else
+          message = message.gsub(/^\S+:\s/,"")
+          broadcast(m,@prefix[0..-3],message)
+        end
       end
     else
       m.reply(message)
     end
   end
 
-	def track_channels(m)
-    @@channels[m.channel.to_s] ||= m if m.channel
-  end
-
 	def broadcast(m,user,message)
-    @@channels.each do |c,m2|
-      if m2.channel
-        users = m2.channel.users.collect{|u| u.first.nick}
+	  if validate_recipient(m, user)
+      $settings['settings']['channel'].map{|channel|channel.split(/\s+/).first}.each do |c|
+        users = Channel(c).users.collect{|u| u.first.nick}
         if users.include? m.user.nick and users.include? user
-          reply m2,"#{user}: #{message}"
+          Channel(c).send "#{user}: #{message}"
         end
       end
     end
