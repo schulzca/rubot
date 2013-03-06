@@ -99,16 +99,11 @@ class PluginBase
         message = message.gsub(/^\S+:\s/,"")
         User(@prefix[0..-3]).send message
       elsif m.channel
-        message = message.gsub(/^\S+:\s/,"#{@prefix}")
-        unless message.match @prefix
-          message = @prefix + message
-        end
+        message = message.gsub(/^\S+:\s/,"")
+        message = @prefix + message
         m.reply(message)
       else
-        message = message.gsub(/^\S+:\s/,"#{@prefix}")
-        unless message.match @prefix
-          message = @prefix + message
-        end
+        message = message.gsub(/^\S+:\s/,"")
         broadcast(m,@prefix[0..-3],message)
       end
     else
