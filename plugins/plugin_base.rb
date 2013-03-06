@@ -112,7 +112,7 @@ class PluginBase
   end
 
 	def track_channels(m)
-    @@channels[m.channel.to_s] = m if m.channel
+    @@channels[m.channel.to_s] ||= m if m.channel
   end
 
 	def broadcast(m,user,message)
