@@ -2,7 +2,7 @@ class GoogleThat < PluginBase
   include Cinch::Plugin
   require 'open-uri'
 
-	$help_messages << "!gt <username> <text>   pm rubot to have him send a lmgtfy link to someone in shared channels"
+	$help_messages << "!gt <text>   Generate a lmgtfy link for <text>"
 
 	listen_to :channel
 	listen_to :private
@@ -13,8 +13,8 @@ class GoogleThat < PluginBase
 				case m.message
 				when /^!help gt$/
 					help(m, "!gt")
-				when /^!gt (\S+)\s+(.*)$/
-				  generate_link(m,$1,$2)
+				when /^!gt (.+)$/
+				  generate_link(m,$1)
   			end
 			rescue Exception => e
 				error(m,e)
@@ -22,11 +22,11 @@ class GoogleThat < PluginBase
     end
 	end
 	
-	def generate_link(m,user,message)
+	def generate_link(m,message)
 	  url = "http://lmgtfy.com?q=#{message}"
 		url = open("http://tinyurl.com/api-create.php?url=#{URI.escape(url)}").read
 		if url != "Error"
-      broadcast(m,user,url)
+      reply(m,"#{m.user.nick}: #{url}")
     end
 	end
 end
