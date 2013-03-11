@@ -46,6 +46,18 @@ class LightsOut < PluginBase
     board = @games[m.user.nick]["board"]
     @games[m.user.nick]["turns"] += 1
     size = @games[m.user.nick]["size"]
+    board = toggle_cell(board,row,column)
+    if board.select{|r| r.select{|c| c}.any?}.any?
+      reply(m,board_to_string(m))
+      @games[m.user.nick]["board"] = board
+    else
+      reply(m, "#{m.user.nick}: You beat the #{size}x#{size} board in #{@games[m.user.nick]["turns"]} turns!")
+      @games.delete m.user.nick
+    end
+  end
+
+  def toggle_cell(board, row, column)
+    size = board.size
     row = [row,0,size - 1].sort[1]
     column = [column,0,size - 1].sort[1]
     board[row][column] = !board[row][column]
@@ -61,21 +73,14 @@ class LightsOut < PluginBase
     if column + 1 < size
       board[row][column+1] = !board[row][column+1]
     end
-    if board.select{|r| r.select{|c| c}.any?}.any?
-      reply(m,board_to_string(m))
-      @games[m.user.nick]["board"] = board
-    else
-      reply(m, "#{m.user.nick}: You beat the #{size}x#{size} board in #{@games[m.user.nick]["turns"]} turns!")
-      @games.delete m.user.nick
-    end
-
+    board
   end
 
   def colorize(m,val)
     if has_color?(m)
       return val ? "\x0309,03O\x03 " : "\x0307,04O\x03 "
     else
-      return val ? "\x0309,03+\x03 " : "\x0307,04~\x03 "
+      return val ? "+ " : "~ "
     end
   end
 
@@ -102,9 +107,12 @@ class LightsOut < PluginBase
     size.times do 
       row = []
       size.times do
-        row << (rand < 0.5)
+        row << false
       end
       board += [row]
+    end
+    100.times do
+      board = toggle_cell(board, rand(size),rand(size))
     end
     board
   end
