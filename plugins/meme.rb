@@ -1,5 +1,4 @@
 require 'mechanize'
-require 'imgur'
 
 class Meme < PluginBase
   include Cinch::Plugin
@@ -51,8 +50,11 @@ class Meme < PluginBase
             "cg" => "Correction-Guy",
             "troll face" => "Troll-Face",
             "tf" => "Troll-Face",
-            "joseph decreux" => "Joseph-Decreux",
-            "jd" => "Joseph-Decreux"
+            "joseph decreux" => "Joseph-Ducreux",
+            "jd" => "Joseph-Ducreux",
+            "bad joke eel" => "Bad-Joke-Eels",
+            "bje" => "Bad-Joke-Eels",
+            "dat ass" => "Dat-Ass"
   }
 
 	$help_messages << "!meme <meme>|<top>|<bottom>   Generate a meme!"
