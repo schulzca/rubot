@@ -2,15 +2,23 @@ require 'rubygems'
 require 'cinch'
 require 'cinch/plugins/identify'
 require 'yaml'
+require 'mechanize'
 
 def random_name
-  constants = %w(b c d f g h j k l m n p qu r s t v w x y z ch st tr pl)
-  vowels = %w(a e i o u y ie au ea)
-  name = ""
-  5.times do |i|
-    name += (i % 2 == 0 ? constants.shuffle.first : vowels.shuffle.first)
-  end
-  name
+  agent = Mechanize.new
+  page = agent.get('http://www.rinkworks.com/namegen/')
+  form = page.forms[1]
+  form.c = "<<s|ss>|<VC|vC|B|BVs|Vs>><v|V|v|<v(l|n|r)|vc>>(th)"
+  res = form.submit
+  names = res.body.scan(/\<td\>(\w+)\<\/td\>/)
+  names[rand(names.length)].first
+#  constants = %w(b c d f g h j k l m n p qu r s t v w x y z ch st tr pl)
+  #vowels = %w(a e i o u y ie au ea)
+  #name = ""
+  #5.times do |i|
+    #name += (i % 2 == 0 ? constants.shuffle.first : vowels.shuffle.first)
+  #end
+  #name
 end
 
 begin
