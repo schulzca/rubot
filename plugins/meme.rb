@@ -54,7 +54,8 @@ class Meme < PluginBase
             "jd" => "Joseph-Ducreux",
             "bad joke eel" => "Bad-Joke-Eels",
             "bje" => "Bad-Joke-Eels",
-            "dat ass" => "Dat-Ass"
+            "dat ass" => "Dat-Ass",
+            "da" => "Dat-Ass"
   }
 
 	$help_messages << "!meme <meme>|<top>|<bottom>   Generate a meme!"
