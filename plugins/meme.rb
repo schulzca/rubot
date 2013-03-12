@@ -1,4 +1,5 @@
 require 'mechanize'
+require 'imgur'
 
 class Meme < PluginBase
   include Cinch::Plugin
@@ -93,7 +94,7 @@ class Meme < PluginBase
         url = open("http://tinyurl.com/api-create.php?url=#{URI.escape(img.src)}").read
         reply(m,"#{m.user.nick}: #{url}")
       rescue
-        reply(m, "Sorry, memegenerator.com is down right now. Try again later.")
+        reply(m, "Sorry, memegenerator.net is down right now. Try again later.")
       end
     else
 	    new_image = IMAGES.keys.sort_by{|option| closest_match(image,option)}.first
