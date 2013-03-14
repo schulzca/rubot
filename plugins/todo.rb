@@ -1,11 +1,11 @@
 class Todo < PluginBase
   include Cinch::Plugin
 
-	$help_messages << "!todo add <message>          add an item to your list"
-	$help_messages << "!todo finish <item number>   remove an item"
-	$help_messages << "!todo <number>               view the <number> item on your list"
-	$help_messages << "!todo list                   view all items"
-	$help_messages << "!todo clear                  finish all items"
+	$help_messages << ["todo","!todo add <message>          add an item to your list"]
+	$help_messages << ["todo","!todo finish <item number>   remove an item"]
+	$help_messages << ["todo","!todo <number>               view the <number> item on your list"]
+	$help_messages << ["todo","!todo list                   view all items"]
+	$help_messages << ["todo","!todo clear                  finish all items"]
 
 	listen_to :channel
 	listen_to :private
@@ -23,8 +23,6 @@ class Todo < PluginBase
 	  if active?(m,"todo")
       begin
         case m.message
-        when /^!help todo$/
-          help(m, "!todo")
         when /^!todo add (.+)$/
           store_item(m,$1)
           write_json

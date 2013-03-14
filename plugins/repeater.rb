@@ -2,7 +2,7 @@ class Repeater < PluginBase
   include Cinch::Plugin
 	listen_to :channel
 	listen_to :private
-  $help_messages << "all: <message>   ping everyone in the room"
+  $help_messages << ["repeater","all: <message>   ping everyone in the room"]
 
   def nicks(m)
     names = m.channel.users.keys.map(&:nick).reject{|n|[$settings['settings']['nick'],m.user.nick].include?(n)}
@@ -13,8 +13,6 @@ class Repeater < PluginBase
     if active?(m,"repeater")
       begin
         case m.message
-        when /^!help all$/
-          help(m,"all:")
         when /^all:(.*)$/
           ping_all(m, $1)
         end

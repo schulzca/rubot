@@ -1,10 +1,10 @@
 class Experience < PluginBase
 	include Cinch::Plugin
 
-  $help_messages << "!exp   !smack <nick> when they deserve it."
-  $help_messages << "!exp   !props <nick> when they did something awesome."
-	$help_messages << "!exp   !level <nick>? to see a persons level"
-	$help_messages << "!exp   !levels to see everyone's level"
+  $help_messages << ["exp","!smack <nick> when they deserve it."]
+  $help_messages << ["exp","!props <nick> when they did something awesome."]
+	$help_messages << ["exp","!level <nick>? to see a persons level"]
+	$help_messages << ["exp","!levels to see everyone's level"]
 
 	listen_to :channel
 	listen_to :private
@@ -31,8 +31,6 @@ class Experience < PluginBase
 	  if active?(m,"experience")
       begin
         case m.message
-        when /^!help exp(erience)?$/
-          help(m, "!exp")
         when /^!level$/
           send_level(m, m.user.nick)
         when /^!level (\S+)$/

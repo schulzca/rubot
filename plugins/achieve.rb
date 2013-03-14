@@ -2,7 +2,7 @@
 class Achieve < PluginBase
   include Cinch::Plugin
 
-	$help_messages << "!achieve <number> <message>   Generate an achievement worth <number> points"
+	$help_messages << ["acheive","!achieve <number> <message>   Generate an achievement worth <number> points"]
 
 	listen_to :channel
 	listen_to :private
@@ -11,8 +11,6 @@ class Achieve < PluginBase
 	  if active?(m,"achieve")
 			begin
 				case m.message
-				when /^!help achieve$/
-					help(m, "!achieve")
         when /^!achieve((ment)? unlocked)?\s+(\d*)\s*(.*)$/
           achieve(m,$3,$4)
   			end

@@ -2,7 +2,7 @@ class GoogleThat < PluginBase
   include Cinch::Plugin
   require 'open-uri'
 
-	$help_messages << "!gt <text>   Generate a lmgtfy link for <text>"
+	$help_messages << ["google that","!gt <text>   Generate a lmgtfy link for <text>"]
 
 	listen_to :channel
 	listen_to :private
@@ -11,8 +11,6 @@ class GoogleThat < PluginBase
 	  if active?(m,"google_that")
 			begin
 				case m.message
-				when /^!help gt$/
-					help(m, "!gt")
 				when /^!gt (.+)$/
 				  generate_link(m,$1)
   			end

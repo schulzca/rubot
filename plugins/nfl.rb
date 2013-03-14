@@ -6,10 +6,10 @@ require 'uri'
 class Nfl < PluginBase 
 	include Cinch::Plugin
 
-	$help_messages << "!nfl gamelist   show every game this week"
-	$help_messages << "!nfl current    show scores for games this week"
-	$help_messages << "!nfl <team abbr> game    show game time for games with teams that match <team abbr>"
-	$help_messages << "!nfl <team abbr> score    show game score for games with team that match <team abbr>"
+	$help_messages << ["nfl","!nfl gamelist   show every game this week"]
+	$help_messages << ["nfl","!nfl current    show scores for games this week"]
+	$help_messages << ["nfl","!nfl <team abbr> game    show game time for games with teams that match <team abbr>"]
+	$help_messages << ["nfl","!nfl <team abbr> score    show game score for games with team that match <team abbr>"]
 
 	@nfl = nil
   listen_to :channel 
@@ -25,8 +25,6 @@ class Nfl < PluginBase
         @nfl = true
         begin
           case m.message
-          when /^!help nfl$/
-            help(m, "!nfl")
           when /^!nfl current$/
             list_active_games(m)
           when /^!nfl gamelist$/

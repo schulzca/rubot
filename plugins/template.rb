@@ -1,7 +1,7 @@
 class template < PluginBase
   include Cinch::Plugin
 
-	$help_messages << "!template   this is what this plugin does"
+	$help_messages << ["template","!template   this is how to use this plugin"]
 
 	listen_to :channel
 	listen_to :private
@@ -10,8 +10,8 @@ class template < PluginBase
 	  if active?(m,"template")
 			begin
 				case m.message
-				when /^!help template$/
-					help(m, "!template")
+        when /^!template$/
+
   			end
 			rescue Exception => e
 				error(m,e)

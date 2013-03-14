@@ -1,7 +1,7 @@
 class Summon < PluginBase
   include Cinch::Plugin
 
-	$help_messages << "!summon x    Master summon's x minions (default 1)."
+	$help_messages << ["summon","!summon <number>    Master summon's <number> minions (default 1)."]
 
 	listen_to :channel
 	listen_to :private
@@ -10,8 +10,6 @@ class Summon < PluginBase
 	  if active?(m,"summon")
 			begin
 				case m.message
-				when /^!help summon$/
-					help(m, "!summon")
         when /^!summon$/
           summon(m,1,m.channel)
         when /^!summon(\s\d+)?(\s\S+)?$/

@@ -215,10 +215,6 @@ class PluginBase
       return true
     end
   end
-
-	def help(m,prefix)
-		$help_messages.each {|help| pm(m.user,help) if help.start_with?(prefix)}
-	end
 	
 	def error(m,e)
 		User($master).send "Be vigilant! (#{e.message})\n#{e.backtrace.join("\n")}"

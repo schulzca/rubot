@@ -1,12 +1,12 @@
 class Timing < PluginBase
 	include Cinch::Plugin
 
-	$help_messages << "!timing     !start to start the stopwatch."
-	$help_messages << "!timing     !stop to stop the stopwatch."
-	$help_messages << "!timing     !lap to peek at the stopwatch."
-	$help_messages << "!timing     !reset to reset the stopwatch."
-	$help_messages << "!timing     !timer <number> to start a timer with <number> seconds."
-	$help_messages << "!timing     !cencel to cancel the timer."
+	$help_messages << ["timing","!start to start the stopwatch."]
+	$help_messages << ["timing","!stop to stop the stopwatch."]
+	$help_messages << ["timing","!lap to peek at the stopwatch."]
+	$help_messages << ["timing","!reset to reset the stopwatch."]
+	$help_messages << ["timing","!timer <number> to start a timer with <number> seconds."]
+	$help_messages << ["timing","!cencel to cancel the timer."]
 
 	listen_to :channel
 	listen_to :private
@@ -18,8 +18,6 @@ class Timing < PluginBase
 	  if active?(m,"timing")
       begin
         case m.message
-        when /^!timing( help)?$/
-          help(m, "!timing")
         when /^!start$/
           start_stopwatch(m)
         when /^!stop$/

@@ -1,8 +1,8 @@
 class Speak < PluginBase
   include Cinch::Plugin
 
-	$help_messages << "!speak               Generate a random sentence from all of its stored grammar"
-	$help_messages << "!speak like <nick>   Generate a random sentence by using <nick>'s grammar"
+	$help_messages << ["speak","!speak   Generate a random sentence from all of its stored grammar"]
+	$help_messages << ["speak","!speak like <nick>   Generate a random sentence by using <nick>'s grammar"]
 
 	listen_to :channel
 	listen_to :private
@@ -29,8 +29,6 @@ class Speak < PluginBase
 			begin
 			  @@message_count = (@@message_count + 1) % 10
 				case m.message
-				when /^!help speak$/
-					help(m, "!speak")
         when /^!speak$/
           generate_grammar(m)
         when /^!speak like (.+)$/

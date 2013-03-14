@@ -1,10 +1,10 @@
 class BaseMath < PluginBase
   include Cinch::Plugin
 
-	$help_messages << "!math     Enter a math expression to have it evaluated."
-	$help_messages << "!math     Preface numbers with '0x' for hex, '0d' for decimal(defaul), '0o' for octal, and '0b' for binary."
-	$help_messages << "!math     Allowed operators: [+,-,*,/,**(power),|(bitwise or),^(bitwise xor),%,&(bitwise and),()]"
-	$help_messages << "!math     Flags: '-r #' => Result in base # (2..36), '-d #' => Unmarked numbers are in base # (2..36, default 10)"
+	$help_messages << ["math", "Enter a math expression to have it evaluated."]
+	$help_messages << ["math", "Preface numbers with '0x' for hex, '0d' for decimal(defaul), '0o' for octal, and '0b' for binary."]
+	$help_messages << ["math", "Allowed operators: [+,-,*,/,**(power),|(bitwise or),^(bitwise xor),%,&(bitwise and),()]"]
+	$help_messages << ["math", "Flags: '-r #' => Result in base # (2..36), '-d #' => Unmarked numbers are in base # (2..36, default 10)"]
 
 	listen_to :channel
 	listen_to :private
@@ -13,8 +13,6 @@ class BaseMath < PluginBase
 	  if active?(m,"base_math")
 			begin
 				case m.message
-				when /^!help math$/
-					help(m, "!math")
         when /^!math ([0-9a-fxor+\-*\/|\^%&()\s]+)\s*$/
           evaluate(m,$1)
         when /^!math (.*)$/

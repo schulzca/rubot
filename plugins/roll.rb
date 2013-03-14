@@ -1,7 +1,7 @@
 class Roll < PluginBase
   include Cinch::Plugin
 
-	$help_messages << "!roll   Roll dice.  Format: 4d6, 2*d12, 2d2d10 (Default 1d6). [-steps] to see each roll."
+	$help_messages << ["roll","!roll   Roll dice.  Format: 4d6, 2*d12, 2d2d10 (Default 1d6). [-steps] to see each roll."]
 
 	listen_to :channel
 	listen_to :private
@@ -10,8 +10,6 @@ class Roll < PluginBase
 	  if active?(m,"roll")
 			begin
 				case m.message
-				when /^!help roll$/
-					help(m, "!roll")
         when /^!roll\s*$/
           roll(m,"d6")
         when /^!roll\s+([0-9d*\s]*\s*(-s(teps)?)?)\s*$/ 

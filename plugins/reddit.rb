@@ -3,7 +3,7 @@ class Reddit < PluginBase
 	listen_to :channel
 	listen_to :private
 
-	$help_messages << "!reddit    grab a link from reddit! options: r/<sub>, <post number>, img|image|imgur"
+	$help_messages << ["reddit","!reddit    Grab a link from reddit! options: r/<sub>, <post number>, img|image|imgur"]
 
 	@reddit = nil
 	
@@ -13,8 +13,6 @@ class Reddit < PluginBase
         @reddit = true
         begin
           case m.message
-          when /^!help r(ed(dit)?)?$/
-            help(m, "!reddit")
           when /^!r(ed(dit)?)?\b/
             get_link(m)
           when /#{$settings['settings']['nick']}/

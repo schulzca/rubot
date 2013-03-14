@@ -58,8 +58,8 @@ class Meme < PluginBase
             "da" => "Dat-Ass"
   }
 
-	$help_messages << "!meme <meme>|<top>|<bottom>   Generate a meme!"
-	$help_messages << "!meme Available Meme Names: #{IMAGES.keys.sort.join(", ")}"
+	$help_messages << ["meme","!meme <meme>|<top>|<bottom>   Generate a meme!"]
+	$help_messages << ["meme","Available Meme Names: #{IMAGES.keys.sort.join(", ")}"]
 
 
 	listen_to :channel
@@ -69,8 +69,6 @@ class Meme < PluginBase
 	  if active?(m,"meme")
 			begin
 				case m.message
-				when /^!help meme$/
-					help(m, "!meme")
         when /^!meme (.+)\|(.+)\|(.*)$/
           generate_meme(m, $1, $2, $3)
   			end

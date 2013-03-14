@@ -3,7 +3,7 @@ class Rhyme < PluginBase
 	listen_to :channel
 	listen_to :private
 
-	$help_messages << "!rhyme <word>  find rhymes for <word>"
+	$help_messages << ["rhyme","!rhyme <word>  find rhymes for <word>"]
 
 	@rhyme = nil
 	def initialize(*args)

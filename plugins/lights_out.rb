@@ -1,7 +1,8 @@
 class LightsOut < PluginBase
   include Cinch::Plugin
 
-	$help_messages << "!lights_out   play a game of lights out!"
+	$help_messages << ["lights out","!lightout <number>  Start a game of lights out with a grid size of <number> (default 3)"]
+	$help_messages << ["lights out","!lightout <row> <col>  Toggle the light at (<row>,<col>). (0,0) is top left"]
 
 	listen_to :channel
 	listen_to :private
@@ -11,8 +12,6 @@ class LightsOut < PluginBase
 	  if active?(m,"lights_out")
 			begin
 				case m.message
-				when /^!help lights_out$/
-					help(m, "!lights_out")
         when /^!(lo|lightsout)(\s*(\d+))?\s*$/
           start_game(m, $3)
         when /^!(lo|lightsout)\s(\d)\s(\d)\s*$/

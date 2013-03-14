@@ -1,7 +1,7 @@
 class WordCount < PluginBase
   include Cinch::Plugin
 
-	$help_messages << "!wordcount   supply a username for their count or 'leader' for the current leader"
+	$help_messages << ["wordcount","!wordcount  Supply a username for their count or 'leader' for the current leader"]
 
 	listen_to :channel
 	listen_to :private
@@ -20,8 +20,6 @@ class WordCount < PluginBase
         begin
           update_tracker(m)
           case m.message
-          when /^!help (wordcount|wc)$/
-            help(m, "!wordcount")
           when /^!(wordcount|wc)(\s+leader)?$/
             display_leader(m)
           when /^!(wordcount|wc)\s+(.+)$/

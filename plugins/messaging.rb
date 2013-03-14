@@ -1,7 +1,7 @@
 class Messaging < PluginBase
   include Cinch::Plugin
 
-  $help_messages << "!msg         send a message to offline users. They will receive them when they log back on."
+  $help_messages << ["msg","!msg <user> <text>   Send a message to offline users. They will receive it when they are online."]
 
 	listen_to :channel
 	listen_to :private
@@ -17,8 +17,6 @@ class Messaging < PluginBase
 	  if @@json
 			begin
 				case m.message
-				when /^!help msg$/
-					help(m, "!msg")
 				when /^!msg (\S+) (.+)$/
           store_message(m, $1, $2)
   			end
