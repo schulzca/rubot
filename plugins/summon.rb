@@ -12,8 +12,8 @@ class Summon < PluginBase
 				case m.message
         when /^!summon$/
           summon(m,1,m.channel)
-        when /^!summon(\s\d+)?(\s\S+)?$/
-          summon(m,$1,$2)
+        when /^!summon(\s+(\d+))?((\s+in)?\s+(\S+))?$/
+          summon(m,$2,$5)
   			end
 			rescue Exception => e
 				error(m,e)
