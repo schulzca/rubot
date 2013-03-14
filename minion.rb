@@ -12,13 +12,6 @@ def random_name
   res = form.submit
   names = res.body.scan(/\<td\>(\w+)\<\/td\>/)
   names[rand(names.length)].first
-#  constants = %w(b c d f g h j k l m n p qu r s t v w x y z ch st tr pl)
-  #vowels = %w(a e i o u y ie au ea)
-  #name = ""
-  #5.times do |i|
-    #name += (i % 2 == 0 ? constants.shuffle.first : vowels.shuffle.first)
-  #end
-  #name
 end
 
 begin
@@ -61,16 +54,15 @@ $irc  = Cinch::Bot.new do
     c.plugins.plugins = $settings["settings"]["plugins"].map {|plugin| constantize(plugin.split("_").map {|word| word.capitalize}.join(""))} if $settings["settings"]["plugins"]
   end
 
-  on :message, /^!help$/ do |m|
-    topics = $help_messages.map{|message| message.split(/\s+/)[0].gsub(/[!:]/,"") }.uniq
-    m.user.send "Available topics: #{topics.join(", ")}\nLearn more with '!help <topic>'"
-  end
-
   on :message, /^!unsummon( #{$settings["settings"]["nick"]})?$/ do |m|
     if m.user == User($master)
       $irc.quit
       system("exit")
     end
+  end
+
+  on :message, /^!whois #{$settings['settings']['nick']}\s*/ do |m|
+    m.reply "#{m.user.nick}: I am #{$settings['settings']['bot_master']}'s minion."
   end
 end
 
