@@ -17,18 +17,14 @@ class WordCount < PluginBase
 	def react_to_message(m)
 	  if active?(m,"word_count")
       if m.user != "nickserv"
-        begin
-          update_tracker(m)
-          case m.message
-          when /^!(wordcount|wc)(\s+leader)?$/
-            display_leader(m)
-          when /^!(wordcount|wc)\s+(.+)$/
-            display_count(m,$2)
-          end
-          write_tracker
-        rescue Exception => e
-          error(m,e)
+        update_tracker(m)
+        case m.message
+        when /^!(wordcount|wc)(\s+leader)?$/
+          display_leader(m)
+        when /^!(wordcount|wc)\s+(.+)$/
+          display_count(m,$2)
         end
+        write_tracker
       end
     end
 	end

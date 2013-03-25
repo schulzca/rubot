@@ -1,4 +1,4 @@
-class template < PluginBase
+class Template < PluginBase
   include Cinch::Plugin
 
 	$help_messages << ["template","!template   this is how to use this plugin"]
@@ -8,14 +8,10 @@ class template < PluginBase
 
 	def react_to_message(m)
 	  if active?(m,"template")
-			begin
-				case m.message
-        when /^!template$/
+      case m.message
+      when /^!template$/
 
-  			end
-			rescue Exception => e
-				error(m,e)
-			end
+      end
     end
 	end
 	

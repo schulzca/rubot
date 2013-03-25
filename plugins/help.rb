@@ -6,16 +6,12 @@ class Help < PluginBase
 
 	def react_to_message(m)
 	  if active?(m,"help")
-			begin
-				case m.message
-				when /^!help$/
-					display_help_options(m)
-        when /^!help\s+(.+)/
-          display_help_for(m,$1)
-  			end
-			rescue Exception => e
-				error(m,e)
-			end
+      case m.message
+      when /^!help$/
+        display_help_options(m)
+      when /^!help\s+(.+)/
+        display_help_for(m,$1)
+      end
     end
 	end
 	

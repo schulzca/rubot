@@ -10,16 +10,12 @@ class LightsOut < PluginBase
 	def react_to_message(m)
 	  @games ||= {}
 	  if active?(m,"lights_out")
-			begin
-				case m.message
-        when /^!(lo|lightsout)(\s*(\d+))?\s*$/
-          start_game(m, $3)
-        when /^!(lo|lightsout)\s(\d)\s(\d)\s*$/
-          take_turn(m, $3.to_i, $2.to_i)
-  			end
-			rescue Exception => e
-				error(m,e)
-			end
+      case m.message
+      when /^!(lo|lightsout)(\s*(\d+))?\s*$/
+        start_game(m, $3)
+      when /^!(lo|lightsout)\s(\d)\s(\d)\s*$/
+        take_turn(m, $3.to_i, $2.to_i)
+      end
     end
 	end
 

@@ -2,6 +2,7 @@ require 'open-uri'
 require 'net/http'
 require 'json'
 require 'uri'
+
 #allow changing message text
 module Cinch
   class Message
@@ -90,24 +91,6 @@ class PluginBase
     end
 	end
 
-	def validate_recipient(m, recipient)
-    channels = @bot.channels
-    channels = channels.select{|c| c.users.map{|u| u.first.nick}.include? m.user.nick}
-    users = []
-    channels.each do |channel|                                              
-      users << channel.users.map{|user| user.first.nick}
-    end
-    users.flatten!
-    choices = channels.map{|c| c.name} + users.uniq
-
-    unless choices.include?(recipient)
-      best_guess = choices.sort_by{|option| closest_match(recipient,option)}.first
-      m.reply "Could not find #{recipient}. Did you mean #{best_guess}?"
-      return false
-    end
-    return true
-  end
-
 	def reply(m,message)
 	  unless @prefix.empty?
 	    if validate_recipient(m,@prefix[0..-3])
@@ -139,13 +122,30 @@ class PluginBase
     end
 	end
 
-
   def pm(user,message, send_to_prefix = true)
     if send_to_prefix and not @prefix.empty?
       User(@prefix[0..-3]).send message
     else
       user.send(@prefix + message)
     end
+  end
+
+	def validate_recipient(m, recipient)
+    channels = @bot.channels
+    channels = channels.select{|c| c.users.map{|u| u.first.nick}.include? m.user.nick}
+    users = []
+    channels.each do |channel|                                              
+      users << channel.users.map{|user| user.first.nick}
+    end
+    users.flatten!
+    choices = channels.map{|c| c.name} + users.uniq
+
+    unless choices.include?(recipient)
+      best_guess = choices.sort_by{|option| closest_match(recipient,option)}.first
+      m.reply "Could not find #{recipient}. Did you mean #{best_guess}?"
+      return false
+    end
+    return true
   end
 
 	def closest_match(attempt,actual)

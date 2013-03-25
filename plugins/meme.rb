@@ -67,14 +67,10 @@ class Meme < PluginBase
 
 	def react_to_message(m)
 	  if active?(m,"meme")
-			begin
-				case m.message
-        when /^!meme (.+)\|(.+)\|(.*)$/
-          generate_meme(m, $1, $2, $3)
-  			end
-			rescue Exception => e
-				error(m,e)
-			end
+      case m.message
+      when /^!meme (.+)\|(.+)\|(.*)$/
+        generate_meme(m, $1, $2, $3)
+      end
     end
 	end
 	

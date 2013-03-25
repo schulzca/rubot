@@ -9,14 +9,10 @@ class Achieve < PluginBase
 
 	def react_to_message(m)
 	  if active?(m,"achieve")
-			begin
-				case m.message
-        when /^!achieve((ment)? unlocked)?\s+(\d*)\s*(.*)$/
-          achieve(m,$3,$4)
-  			end
-			rescue Exception => e
-				error(m,e)
-			end
+      case m.message
+      when /^!achieve((ment)? unlocked)?\s+(\d*)\s*(.*)$/
+        achieve(m,$3,$4)
+      end
     end
 	end
 	

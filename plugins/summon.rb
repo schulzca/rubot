@@ -8,16 +8,12 @@ class Summon < PluginBase
 	
 	def react_to_message(m)
 	  if active?(m,"summon")
-			begin
-				case m.message
-        when /^!summon$/
-          summon(m,1,m.channel)
-        when /^!summon(\s+(\d+))?((\s+in)?\s+(\S+))?$/
-          summon(m,$2,$5)
-  			end
-			rescue Exception => e
-				error(m,e)
-			end
+      case m.message
+      when /^!summon$/
+        summon(m,1,m.channel)
+      when /^!summon(\s+(\d+))?((\s+in)?\s+(\S+))?$/
+        summon(m,$2,$5)
+      end
     end
 	end
 	

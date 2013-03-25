@@ -14,18 +14,14 @@ class Messaging < PluginBase
   end
 
 	def react_to_message(m)
-	  if @@json
-			begin
-				case m.message
-				when /^!msg (\S+) (.+)$/
-          store_message(m, $1, $2)
-  			end
-  			if(m.user)
-          check_user_mailbox(m, m.user.nick)
-        end
-			rescue Exception => e
-				error(m,e)
-			end
+	  if @@json and active?(m,'messaging')
+      case m.message
+      when /^!msg (\S+) (.+)$/
+        store_message(m, $1, $2)
+      end
+      if(m.user)
+        check_user_mailbox(m, m.user.nick)
+      end
 		end
 	end
 

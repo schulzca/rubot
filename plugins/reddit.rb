@@ -18,7 +18,6 @@ class Reddit < PluginBase
           when /#{$settings['settings']['nick']}/
             get_link(m) if m.message.match(/\br(ed(dit)?)?\b/)
           end
-            
         rescue Exception => e
           if e.message.length < 256
             error(m,e)

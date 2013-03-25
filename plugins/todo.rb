@@ -21,24 +21,20 @@ class Todo < PluginBase
 	
 	def react_to_message(m)
 	  if active?(m,"todo")
-      begin
-        case m.message
-        when /^!todo add (.+)$/
-          store_item(m,$1)
-          write_json
-        when /^!todo finish (\d+)$/
-          finish_item(m,$1.to_i)
-          write_json
-        when /^!todo (\d+)$/
-          view_item(m,$1.to_i)
-        when /^!todo list$/
-          view_all(m)
-        when /^!todo clear$/
-          finish_all(m)
-          write_json
-        end
-      rescue Exception => e
-        error(m,e)
+      case m.message
+      when /^!todo add (.+)$/
+        store_item(m,$1)
+        write_json
+      when /^!todo finish (\d+)$/
+        finish_item(m,$1.to_i)
+        write_json
+      when /^!todo (\d+)$/
+        view_item(m,$1.to_i)
+      when /^!todo list$/
+        view_all(m)
+      when /^!todo clear$/
+        finish_all(m)
+        write_json
       end
     end
 	end

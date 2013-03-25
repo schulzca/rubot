@@ -11,13 +11,9 @@ class Repeater < PluginBase
 
   def react_to_message(m)
     if active?(m,"repeater")
-      begin
-        case m.message
-        when /^all:(.*)$/
-          ping_all(m, $1)
-        end
-      rescue Exception => e
-        error(m,e)
+      case m.message
+      when /^all:(.*)$/
+        ping_all(m, $1)
       end
     end
   end

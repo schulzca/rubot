@@ -5,16 +5,12 @@ class PluginManager < PluginBase
 	listen_to :private
 	
 	def react_to_message(m)
-			begin
-				case m.message
-				when /^!update$/
-				  if m.user.nick == $master
-            reload_all(m)
-          end
-  			end
-			rescue Exception => e
-				error(m,e)
-			end
+    case m.message
+    when /^!update$/
+      if m.user.nick == $master
+        reload_all(m)
+      end
+    end
 	end
 
 	def load_plugin(m, plugin, file_name)

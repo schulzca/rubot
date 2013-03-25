@@ -11,16 +11,12 @@ class BaseMath < PluginBase
 
 	def react_to_message(m)
 	  if active?(m,"base_math")
-			begin
-				case m.message
-        when /^!math ([0-9a-fxor+\-*\/|\^%&()\s]+)\s*$/
-          evaluate(m,$1)
-        when /^!math (.*)$/
-          explain_failure(m,$1)
-  			end
-			rescue Exception => e
-			  reply(m,"#{m.user.nick}: Invalid syntax")
-			end
+      case m.message
+      when /^!math ([0-9a-fxor+\-*\/|\^%&()\s]+)\s*$/
+        evaluate(m,$1)
+      when /^!math (.*)$/
+        explain_failure(m,$1)
+      end
     end
 	end
 	

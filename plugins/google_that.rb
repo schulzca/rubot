@@ -9,14 +9,10 @@ class GoogleThat < PluginBase
 	
 	def react_to_message(m)
 	  if active?(m,"google_that")
-			begin
-				case m.message
-				when /^!gt (.+)$/
-				  generate_link(m,$1)
-  			end
-			rescue Exception => e
-				error(m,e)
-			end
+      case m.message
+      when /^!gt (.+)$/
+        generate_link(m,$1)
+      end
     end
 	end
 	

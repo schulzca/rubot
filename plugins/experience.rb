@@ -29,21 +29,17 @@ class Experience < PluginBase
 
 	def react_to_message(m)
 	  if active?(m,"experience")
-      begin
-        case m.message
-        when /^!level$/
-          send_level(m, m.user.nick)
-        when /^!level (\S+)$/
-          send_level(m,$1)
-        when /^!levels$/
-          send_all_levels(m)
-        when /^!props (\S+)$/
-          give_props(m,$1)
-        when /^!smack (\S+)$/
-          smack(m,$1)
-        end
-      rescue Exception => e
-        error(m,e)
+      case m.message
+      when /^!level$/
+        send_level(m, m.user.nick)
+      when /^!level (\S+)$/
+        send_level(m,$1)
+      when /^!levels$/
+        send_all_levels(m)
+      when /^!props (\S+)$/
+        give_props(m,$1)
+      when /^!smack (\S+)$/
+        smack(m,$1)
       end
     end
 	end

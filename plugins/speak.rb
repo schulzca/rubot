@@ -26,20 +26,16 @@ class Speak < PluginBase
 
 	def react_to_message(m)
 	  if active?(m,"speak")
-			begin
-			  @@message_count = (@@message_count + 1) % 10
-				case m.message
-        when /^!speak$/
-          generate_grammar(m)
-        when /^!speak like (.+)$/
-          generate_grammar(m, $1)
-        else
-          store_grammar(m)
-  			end
-        save_json if @@message_count == 0
-			rescue Exception => e
-				error(m,e)
-			end
+      @@message_count = (@@message_count + 1) % 10
+      case m.message
+      when /^!speak$/
+        generate_grammar(m)
+      when /^!speak like (.+)$/
+        generate_grammar(m, $1)
+      else
+        store_grammar(m)
+      end
+      save_json if @@message_count == 0
     end
 	end
 

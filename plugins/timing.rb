@@ -16,23 +16,19 @@ class Timing < PluginBase
 
 	def react_to_message(m)
 	  if active?(m,"timing")
-      begin
-        case m.message
-        when /^!start$/
-          start_stopwatch(m)
-        when /^!stop$/
-          stop_stopwatch(m)
-        when /^!lap$/
-          peek_stopwatch(m)
-        when /^!timer\s+(\d+)/
-          start_timer(m, $1.to_i)
-        when /^!reset$/
-          reset_stopwatch(m)
-        when /^!cancel$/
-          cancel_timer(m)
-        end
-      rescue Exception => e
-        error(m,e)
+      case m.message
+      when /^!start$/
+        start_stopwatch(m)
+      when /^!stop$/
+        stop_stopwatch(m)
+      when /^!lap$/
+        peek_stopwatch(m)
+      when /^!timer\s+(\d+)/
+        start_timer(m, $1.to_i)
+      when /^!reset$/
+        reset_stopwatch(m)
+      when /^!cancel$/
+        cancel_timer(m)
       end
     end
 	end

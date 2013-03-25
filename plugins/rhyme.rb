@@ -14,19 +14,14 @@ class Rhyme < PluginBase
 	  if active?(m,"rhyme")
       unless @rhyme
         @rhyme = true
-        begin
-          case m.message
-          when /^!rhyme help$/
-            help(m, "!rhyme")
-          when /^!rhyme (\S+)$/
-            get_rhymes(m,$1)
-          when /^!rhyme$/
-            help(m, "!rhyme")
-          end	
-            
-        rescue Exception => e
-          error(m,e)
-        end
+        case m.message
+        when /^!rhyme help$/
+          help(m, "!rhyme")
+        when /^!rhyme (\S+)$/
+          get_rhymes(m,$1)
+        when /^!rhyme$/
+          help(m, "!rhyme")
+        end	
         @rhyme = nil
       end
     end

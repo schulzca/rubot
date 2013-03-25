@@ -8,16 +8,12 @@ class Roll < PluginBase
 
 	def react_to_message(m)
 	  if active?(m,"roll")
-			begin
-				case m.message
-        when /^!roll\s*$/
-          roll(m,"d6")
-        when /^!roll\s+([0-9d*\s]*\s*(-s(teps)?)?)\s*$/ 
-          roll(m,$1)
-  			end
-			rescue Exception => e
-				error(m,e)
-			end
+      case m.message
+      when /^!roll\s*$/
+        roll(m,"d6")
+      when /^!roll\s+([0-9d*\s]*\s*(-s(teps)?)?)\s*$/ 
+        roll(m,$1)
+      end
     end
 	end
 
